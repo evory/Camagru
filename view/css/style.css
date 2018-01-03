@@ -1,6 +1,8 @@
 /*--------------------BASE--------------------*/
 
 body {
+  width: 100%;
+  margin: 0 auto;
 	background-color: grey;
 }
 
@@ -10,7 +12,7 @@ a {
 }
 
 h1 {
-	font-size: 40px;;
+	font-size: 30px;
 }
 
 
@@ -18,46 +20,54 @@ h1 {
 /*----------Header----------*/
 
 .header {
-	width: 100%;
-	height: 100px;
-	border: 1px solid black;
-	margin-bottom: 30px;
+	width: 50%;
+  min-width: 1000px;
+  max-width: 1000px;
+	height: 50px;
+  margin: 0 auto;
 }
 
-.header.h1 {
-	line-height: 100px;
+.header_background {
+  position: absolute;
+  width: 100%;
+  height: 50px;
+  background-color: black;
+  opacity: 0.5;
+  z-index: -1;
+}
+
+.header h1 {
+  line-height: 50px;
+  text-align: center;
+  margin-top: 0;
 }
 
 .header_accueil {
 	width: 20%;
-	padding-left: 35px;
-	border: 3px solid red;
+  height: 50px;
 	float: left;
 }
 
 .header_menu {
-	width: 100%;
-	height: 100px;
-	border: 3px solid blue;
+	height: 50px;
 }
 
 .header_menu li{
 	list-style-type: none;
 	margin-left: 5%;
-	height: 100px;
-	border: 3px solid pink;
-	line-height: 100px;
+  height: 50px;
+  line-height: 50px;
 }
 
 .header_menu_btn {
 	font-size: 30px;
-	float: left;
+  display: inline;
 }
 
 /*-----------Sidebar-----------*/
 
 .sidebar {
-	float: left;
+  float: left;
 	width: 200px;
 	height: 900px;
 	border: 3px solid orange;
@@ -83,30 +93,43 @@ h1 {
 
 /*-----------Content-----------*/
 
+.all-middle-content {
+  width: 50%;
+  min-width: 1000px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
 .content {
-	float: left;
 	width: 900px;
 	height: 990px;
-	margin-left: 20px;
+	margin-left: 220px;
 	border: 3px solid yellow;
+  margin-top: 20px;
 }
 
 .content_camera {
-	width: 800px;
-	height: 740px;
-	margin-left: 50px;
-	margin-top: 50px;
-	border: 3px solid green;
+  margin-left: 100px;
+  margin-top: 50px;
+  width: 700px;
+  height: 700px;
+  background-color: green
+}
+
+.content_capture_btn {
+  display: flex;
+  width: 30px;
+  height: 30px;
+  background-color: orange;
 }
 
 .content_stickers {
 	width: 800px;
 	height: 150px;
 	margin-left: 50px;
-	margin-top: 15px;
 	border: 3px solid white;
-}
 
+}
 /*--------------------MODULE--------------------*/
 
 /*--------------------STATE---------------------*/
