@@ -1,32 +1,11 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<link rel="stylesheet" href="view/css/style.css">
-		<title>Camagru</title>
-	</head>
-	<body>
-		<div class="header_background">
-		</div>
-		<div class="header">
-				<div class="header_accueil">
-					<h1><a href="#">Camagru</a></h1>
-				</div>
-				<div class="header_menu">
-					<li class="header_menu_btn"><a href="news.php">News</a></li>
-					<li class="header_menu_btn"><a href="livreor.php">Livre d'or</a></li>
-					<li class="header_menu_btn"><a href="account.php">Account</a></li>
-					<li class="header_menu_btn"><a href="contact.php">Contact</a></li>
-				</div>
-		</div>
 		<div class="all-middle-content">
 			<div class="sidebar">
 				<div class="sidebar_title">
-					<h3>Gallery</h3>
+					<h3>Snap</h3>
 				</div>
-				<div class="sidebar_pics">
+				<canvas class="sidebar_canvas">
 
-				</div>
+				</canvas>
 				<div class="sidebar_seeall">
 					<a href="#">see all...</a>
 				</div>
@@ -44,7 +23,7 @@
 						}
 
 						function handleVideo(stream) {
-							video.src = window.URL.createObjectURL(stream);
+							// video.src = window.URL.createObjectURL(stream);
 						}
 
 						function videoError(e) {
@@ -57,9 +36,6 @@
 					SNAP
 				</button>
 				<div class="content_stickers">
-
 				</div>
 			</div>
 		</div>
-	</body>
-</html>
