@@ -14,7 +14,7 @@
     </div>
     <div class="header_menu">
         <li class="header_menu_btn"><a href="gallery.php">Gallery</a></li>
-        <li class="header_menu_btn"><a href="account.php">Account</a></li>
+        <li class="header_menu_btn"><a href="/user/account">Account</a></li>
         <?php
         if (!$_SESSION['login'] || $_SESSION['login'] == '') {
             echo '<li class="header_menu_btn"><a href="/user/login">Log in</a></li>';
@@ -23,7 +23,6 @@
         else {
             echo '<li class="header_menu_btn"><a href="/user/logout">Log out</a></li>';
         }
-        echo "   SESSION =  "; var_dump($_SESSION);
         ?>
     </div>
 </div>

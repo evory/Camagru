@@ -7,7 +7,7 @@
     </head>
     <body>
         <form class="form" action="" method="post">
-            <?= ($message)?$message:''; ?>
+            <?=$message ?>
             <h1>Login</h1>
             Username : <input type="text" name="username"><br><br>
             Password : <input type="password" name="password"><br><br>
