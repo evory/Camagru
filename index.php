@@ -2,7 +2,7 @@
 
 session_start();
 
-// start database
+// require_once('./config/setup.php');
 
 $array_route = explode("/", $_GET['route']);
 $controller = $array_route[1];
