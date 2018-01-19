@@ -1,7 +1,9 @@
 <?php
 
-require('./models/user.php');
-/*-------------------LOGIN-------------------*/
+require('./models/user_infos.php');
+require('./models/check_database.class.php');
+
+/*-------------------------LOGIN-------------------------*/
 
 if ($action == "login")
 {
@@ -28,7 +30,7 @@ if ($action == "login")
     include("./view/footer.php");
 }
 
-/*-------------------LOGOUT-------------------*/
+/*-------------------------LOGOUT-------------------------*/
 
 if ($action == "logout")
 {
@@ -36,40 +38,87 @@ if ($action == "logout")
     // header("Location:/");
 }
 
-/*-------------------SIGNIN-------------------*/
+/*-------------------------SIGNIN-------------------------*/
 
+// print_r($login_db);
 if ($action == "signin")
 {
     if (isset($_POST['submit'])) {
-        $email = $_POST['email'];
-        $username = $_POST['username'];
-        $password = ($_POST['password']);
-        if ($username && $password && $email) {
-            // if (comparer %username et $email a la base de donnee, si existe deja, tej le mec) {
-            // CREER USER DANS LA BASE DE DONNEE
-            // ENVOYER EMAIL
-            $_SESSION['email'] = $email;
-            $_SESSION['login'] = $username;
-            $req_prep = $db->prepare("INSERT INTO user(email, username, hash) VALUES (:email, :username, :hash)");
-            $req_prep->bindParam(':username', $username);
-            $req_prep->bindParam(':email', $email);
-            $req_prep->bindParam(':hash', $password);
-            $req_prep->execute();
-
-            // $req_prep->execute();
-            // $message "Bienvenue $username !";
+        if ($_POST['password'] === $_POST['confirm_password']) {
+            // foreach ($login_db as $key) {
+            //     if (strcmp($_POST['username'], ($login_db[$i]['username'])) == 0)
+            //     {
+            //         $message = "Username already taken !";
+            //         include("./view/header.php");
+            //         include("./view/signin.php");
+            //         include("./view/footer.php");
+            //         die();
+            //     }
+            //         $i++;
             // }
-        } else {
-            $message = "Please fill all fields";
+            //
+            // foreach ($email_db as $key) {
+            //     if (strcmp($_POST['email'], ($login_db[$i]['email'])) == 0)
+            //     {
+            //         $message = "Email already exists !";
+            //         include("./view/header.php");
+            //         include("./view/signin.php");
+            //         include("./view/footer.php");
+            //         die();
+            //     }
+            //         $i++;
+            // }
+            $check_database = new CheckDatabase(); // PROBLEMMMMME dans le if
+
+                // print_r($check_database->verify_duplicates($login_db, $_POST['username'], "username"));
+            if (($check_database->verify_duplicates($login_db, $_POST['username'], "username")) == 1);
+            {
+                echo "Username already taken ";
+                echo $_POST['username'];
+                include("./view/header.php");
+                include("./view/signin.php");
+                include("./view/footer.php");
+                die();
+            }
+
+            // if (($check_database->verify_duplicates($email_db, $_POST['email'], "email")) == 1);
+            // {
+            //     echo "Email already exists";
+            //     include("./view/header.php");
+            //     include("./view/signin.php");
+            //     include("./view/footer.php");
+            //     die();
+            // }
+
+            $email = $_POST['email'];
+            $username = $_POST['username'];
+            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            if ($username && $password && $email) {
+                $_SESSION['email'] = $email;
+                $_SESSION['login'] = $username;
+                $req_prep = $db->prepare("INSERT INTO user (email, username, hash) VALUES (:email, :username, :hash)");
+                $req_prep->bindParam(':username', $username);
+                $req_prep->bindParam(':email', $email);
+                $req_prep->bindParam(':hash', $password);
+                $req_prep->execute();
+                $message = "Bienvenue $username !";
+                // ENVOYER EMAIL
+            }
+
+
+
+
         }
     }
+}
     // if(isset($_SESSION['login'])) {
     //     header("Location:/");
     // }
     include("./view/header.php");
     include("./view/signin.php");
     include("./view/footer.php");
-}
+
+/*------------------------ACCOUNT--------------------------*/
 
 if ($action == "account") {
     include("./view/account.php");
