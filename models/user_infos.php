@@ -16,4 +16,5 @@ $email_array = $email_db->fetchAll(PDO::FETCH_ASSOC);
 
 $user_info = $db->query('SELECT * FROM user');
 $user_array = $user_info->fetchAll(PDO::FETCH_ASSOC);
+
 ?>

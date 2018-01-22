@@ -7,38 +7,40 @@ require('./models/check_database.class.php');
 
 if ($action == "login")
 {
+    $query = $db->query("SELECT hash FROM user WHERE username = " . $_POST['username']);
+    $query = $query->setFetchMode(PDO::FETCH_OBJ);
+    print_r($query);
+
     if (isset($_POST['submit'])) {
-        $username = $_POST['username'];
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        if ($_POST['username'] == "") {
+            $message = "Username field is empty";
+
+        } else {
+            $username = $_POST['username'];
+        }
+        if ($_POST['password'] == "") {
+            $message = "Username field is empty";
+        } else {
+            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        }
         if ($username && $password) {
             $check_database = new CheckDatabase;
-
-
-            //
-            // $login_dup = $check_database->verify_duplicates($login_array, $_POST['username'], "username");
-            // if ($login_dup == 0)
-            // {
-            //     include("./view/header.php");
-            //     $message =  "Username or password incorrect";
-            //     include("./view/signin.php");
-            //     include("./view/footer.php");
-            //     die();
-            // }
-
-
-
-            if (password_verify($_POST['password'], $hash)) {
-                echo 'Le mot de passe est valide !';
+            $login_dup = $check_database->verify_duplicates($login_array, $_POST['username'], "username");
+            if ($login_dup == 0)
+            {
+                // include("./view/header.php");
+                $message =  "Username or password incorrect";
+                // include("./view/login.php");
+                // include("./view/footer.php");
+                die();
             } else {
-                echo 'Le mot de passe est invalide.';
+                $_SESSION['login'] = $username;
             }
-
-
-
-
-
-
-            $_SESSION['login'] = $username;
+            // if (password_verify($_POST['password'], return_hash($_POST['username'])) {
+            //     echo 'Le mot de passe est valide !';
+            // } else {
+            //     echo 'Le mot de passe est invalide.';
+            // }
             // echo "Bienvenue $username !";
             // }
         }

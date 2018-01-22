@@ -1,5 +1,7 @@
 <?php
 
+require("./config/database.php");
+
 class CheckDatabase
 {
     /* Si retourne 1, la valeur a été trouvé dans le tableau */
@@ -17,10 +19,10 @@ class CheckDatabase
         return (0);
     }
 
-    public function return_hash() {
-
-        
-    }
+    // public function return_hash($user_name) {
+    //     $req_query = $db->query("SELECT hash FROM user WHERE username = $user_name");
+    //     return
+    // }
 }
 
 ?>
