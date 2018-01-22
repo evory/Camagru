@@ -9,10 +9,35 @@ if ($action == "login")
 {
     if (isset($_POST['submit'])) {
         $username = $_POST['username'];
-        $password = $_POST['password'];
-
+        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
         if ($username && $password) {
-            // if (comparer %username a la base de donnee) {
+            $check_database = new CheckDatabase;
+
+
+            //
+            // $login_dup = $check_database->verify_duplicates($login_array, $_POST['username'], "username");
+            // if ($login_dup == 0)
+            // {
+            //     include("./view/header.php");
+            //     $message =  "Username or password incorrect";
+            //     include("./view/signin.php");
+            //     include("./view/footer.php");
+            //     die();
+            // }
+
+
+
+            if (password_verify($_POST['password'], $hash)) {
+                echo 'Le mot de passe est valide !';
+            } else {
+                echo 'Le mot de passe est invalide.';
+            }
+
+
+
+
+
+
             $_SESSION['login'] = $username;
             // echo "Bienvenue $username !";
             // }
@@ -35,7 +60,7 @@ if ($action == "login")
 if ($action == "logout")
 {
     session_destroy();
-    // header("Location:/");
+    header("Location:/");
 }
 
 /*-------------------------SIGNIN-------------------------*/
@@ -44,54 +69,30 @@ if ($action == "logout")
 if ($action == "signin")
 {
     if (isset($_POST['submit'])) {
-        if ($_POST['password'] === $_POST['confirm_password']) {
-            // foreach ($login_db as $key) {
-            //     if (strcmp($_POST['username'], ($login_db[$i]['username'])) == 0)
-            //     {
-            //         $message = "Username already taken !";
-            //         include("./view/header.php");
-            //         include("./view/signin.php");
-            //         include("./view/footer.php");
-            //         die();
-            //     }
-            //         $i++;
-            // }
-            //
-            // foreach ($email_db as $key) {
-            //     if (strcmp($_POST['email'], ($login_db[$i]['email'])) == 0)
-            //     {
-            //         $message = "Email already exists !";
-            //         include("./view/header.php");
-            //         include("./view/signin.php");
-            //         include("./view/footer.php");
-            //         die();
-            //     }
-            //         $i++;
-            // }
-            $check_database = new CheckDatabase(); // PROBLEMMMMME dans le if
-
-                // print_r($check_database->verify_duplicates($login_db, $_POST['username'], "username"));
-            if (($check_database->verify_duplicates($login_db, $_POST['username'], "username")) == 1);
+        if ($_POST['password'] == $_POST['confirm_password']) {
+            $check_database = new CheckDatabase;
+            $login_dup = $check_database->verify_duplicates($login_array, $_POST['username'], "username");
+            if ($login_dup == 1)
             {
-                echo "Username already taken ";
-                echo $_POST['username'];
                 include("./view/header.php");
+                $message =  "Username already taken ";
                 include("./view/signin.php");
                 include("./view/footer.php");
                 die();
             }
 
-            // if (($check_database->verify_duplicates($email_db, $_POST['email'], "email")) == 1);
-            // {
-            //     echo "Email already exists";
-            //     include("./view/header.php");
-            //     include("./view/signin.php");
-            //     include("./view/footer.php");
-            //     die();
-            // }
+            $email_dup = $check_database->verify_duplicates($email_array, $_POST['email'], "email");
+            if ($email_dup == 1)
+            {
+                include("./view/header.php");
+                $message = "Email already exists";
+                include("./view/signin.php");
+                include("./view/footer.php");
+                die();
+            }
 
-            $email = $_POST['email'];
             $username = $_POST['username'];
+            $email = $_POST['email'];
             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
             if ($username && $password && $email) {
                 $_SESSION['email'] = $email;
@@ -104,19 +105,15 @@ if ($action == "signin")
                 $message = "Bienvenue $username !";
                 // ENVOYER EMAIL
             }
-
-
-
-
         }
     }
+    include("./view/header.php");
+    include("./view/signin.php");
+    include("./view/footer.php");
 }
     // if(isset($_SESSION['login'])) {
     //     header("Location:/");
     // }
-    include("./view/header.php");
-    include("./view/signin.php");
-    include("./view/footer.php");
 
 /*------------------------ACCOUNT--------------------------*/
 
