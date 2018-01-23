@@ -1,16 +1,13 @@
 <?php
 
 require('./models/user_infos.php');
-require('./models/check_database.class.php');
+require('./models/Database.class.php');
 
 /*-------------------------LOGIN-------------------------*/
 
 if ($action == "login")
 {
-    $query = $db->query("SELECT hash FROM user WHERE username = " . $_POST['username']);
-    $query = $query->setFetchMode(PDO::FETCH_OBJ);
-    print_r($query);
-
+$sql = "SELECT * FROM user";
     if (isset($_POST['submit'])) {
         if ($_POST['username'] == "") {
             $message = "Username field is empty";
@@ -24,15 +21,12 @@ if ($action == "login")
             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
         }
         if ($username && $password) {
-            $check_database = new CheckDatabase;
-            $login_dup = $check_database->verify_duplicates($login_array, $_POST['username'], "username");
+
+            $login_dup = Database::getInstance()->verify_duplicates($login_array, $_POST['username'], "username");
             if ($login_dup == 0)
             {
-                // include("./view/header.php");
                 $message =  "Username or password incorrect";
-                // include("./view/login.php");
-                // include("./view/footer.php");
-                die();
+                exit();
             } else {
                 $_SESSION['login'] = $username;
             }
@@ -72,8 +66,8 @@ if ($action == "signin")
 {
     if (isset($_POST['submit'])) {
         if ($_POST['password'] == $_POST['confirm_password']) {
-            $check_database = new CheckDatabase;
-            $login_dup = $check_database->verify_duplicates($login_array, $_POST['username'], "username");
+            // $check_database = new Database;
+            $login_dup = Database::getInstance()->verify_duplicates($login_array, $_POST['username'], "username");
             if ($login_dup == 1)
             {
                 include("./view/header.php");
@@ -83,7 +77,7 @@ if ($action == "signin")
                 die();
             }
 
-            $email_dup = $check_database->verify_duplicates($email_array, $_POST['email'], "email");
+            $email_dup = Database::getInstance()->verify_duplicates($email_array, $_POST['email'], "email");
             if ($email_dup == 1)
             {
                 include("./view/header.php");
@@ -99,12 +93,12 @@ if ($action == "signin")
             if ($username && $password && $email) {
                 $_SESSION['email'] = $email;
                 $_SESSION['login'] = $username;
-                $req_prep = $db->prepare("INSERT INTO user (email, username, hash) VALUES (:email, :username, :hash)");
-                $req_prep->bindParam(':username', $username);
-                $req_prep->bindParam(':email', $email);
-                $req_prep->bindParam(':hash', $password);
-                $req_prep->execute();
-                $message = "Bienvenue $username !";
+                // $req_prep = $db->prepare("INSERT INTO user (email, username, hash) VALUES (:email, :username, :hash)");
+                // $req_prep->bindParam(':username', $username);
+                // $req_prep->bindParam(':email', $email);
+                // $req_prep->bindParam(':hash', $password);
+                // $req_prep->execute();
+                // $message = "Bienvenue $username !";
                 // ENVOYER EMAIL
             }
         }
