@@ -1,5 +1,6 @@
 <?php
-include_once("./config/db-config.php");
+
+require("./config/db-config.php");
 
 /*
 *   Classe de gestion de la base de donnée
@@ -26,7 +27,7 @@ class Database
             $this->PDOInstance = new PDO('mysql:host=' .DB_HOST. ';dbname=' .DB_DATABASE, DB_USER, DB_PASSWORD, $options);
         } catch (PDOException $e) {
             try {
-                $db = new PDO('mysql:host=localhost', "root", "br200991");
+                $this->PDOInstance = new PDO('mysql:host=localhost', "root", "br200991");
             } catch (PDOException $e) {
                 $message = "Database unaviable, please try again later";
                 exit($e->getMessage());
@@ -69,10 +70,11 @@ class Database
                     } else {
                         $dataType = PDO::PARAM_STR;
                     }
-                    $statement->bindVašlue(':' .$key, $value, $dataType);
+                    $statement->bindValue(':' .$key, $value, $dataType);
                 }
             }
-                $statement->execute();
+            print_r($statement);
+            $statement->execute();
 
             if($multiple) {
                 $result = $statement->fetchAll(PDO::FETCH_ASSOC);

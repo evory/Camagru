@@ -1,7 +1,7 @@
 <?php
 
-require('./models/user_infos.php');
-require('./models/Database.class.php');
+require_once('./models/user_infos.php');
+require_once('./models/Database.class.php');
 
 /*-------------------------LOGIN-------------------------*/
 
@@ -61,38 +61,33 @@ if ($action == "logout")
 
 /*-------------------------SIGNIN-------------------------*/
 
-// print_r($login_db);
 if ($action == "signin")
 {
     if (isset($_POST['submit'])) {
         if ($_POST['password'] == $_POST['confirm_password']) {
-            // $check_database = new Database;
             $login_dup = Database::getInstance()->verify_duplicates($login_array, $_POST['username'], "username");
-            if ($login_dup == 1)
-            {
+            if ($login_dup == 1) {
                 include("./view/header.php");
-                $message =  "Username already taken ";
+                $message = "Username already taken";
                 include("./view/signin.php");
                 include("./view/footer.php");
-                die();
+                exit();
             }
-
             $email_dup = Database::getInstance()->verify_duplicates($email_array, $_POST['email'], "email");
-            if ($email_dup == 1)
-            {
+            if ($email_dup == 1) {
                 include("./view/header.php");
                 $message = "Email already exists";
                 include("./view/signin.php");
                 include("./view/footer.php");
-                die();
+                exit();
             }
-
             $username = $_POST['username'];
             $email = $_POST['email'];
             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
             if ($username && $password && $email) {
                 $_SESSION['email'] = $email;
                 $_SESSION['login'] = $username;
+                Database::getInstance()->request("INSERT INTO user (email, username, hash) VALUES ($email, $username, $password)");
                 // $req_prep = $db->prepare("INSERT INTO user (email, username, hash) VALUES (:email, :username, :hash)");
                 // $req_prep->bindParam(':username', $username);
                 // $req_prep->bindParam(':email', $email);
