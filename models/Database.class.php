@@ -54,7 +54,6 @@ class Database
     * @param $fileds Y- a-t'il est champs a traiter ?
     * @param $multiple La requete doit-elle retourner plusieurs resultats ?
     */
-
     public function request($sql, $fields = false, $multiple = false) {
         try {
             $statement = $this->PDOInstance->prepare($sql);
@@ -73,16 +72,13 @@ class Database
                     $statement->bindValue(':' .$key, $value, $dataType);
                 }
             }
-            print_r($statement);
             $statement->execute();
-
             if($multiple) {
                 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
             } else {
                 $result = $statement->fetch(PDO::FETCH_ASSOC);
             }
         $statement->closeCursor();
-
         return($result);
 
         } catch (Exception $e) {
@@ -94,18 +90,21 @@ class Database
 
     /*
     * Si retourne 1, la valeur a été trouvé dans le tableau
+    * @param $array_given le tableau a checker
+    * @param $Value_to_check valeur a rechercher
     */
-    public function verify_duplicates($array_given, $value_to_check, $option)
+    public function verify_duplicates($array_given, $value_to_check)
     {
         if ($array_given == NULL) {
-            return(0);
+            return(FALSE);
         }
-        foreach ($array_given as $key) {
-            if (strcmp($value_to_check, ($array_given[$i][$option])) == 0) {
-                return (1);
+        foreach ($array_given as $key => $value) {
+            if(in_array($value_to_check, $value)) {
+                return(TRUE);
+            } else {
+                return (FALSE);
             }
-            $i++;
         }
-        return (0);
+        return (FALSE);
     }
 }

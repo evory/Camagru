@@ -7,36 +7,45 @@ require_once('./models/Database.class.php');
 
 if ($action == "login")
 {
-$sql = "SELECT * FROM user";
     if (isset($_POST['submit'])) {
-        if ($_POST['username'] == "") {
-            $message = "Username field is empty";
-
+        if (empty($_POST['username'])) {
+            include("./view/header.php");
+            $message = "Username is empty";
+            include("./view/login.php");
+            include("./view/footer.php");
+            exit();
         } else {
             $username = $_POST['username'];
         }
-        if ($_POST['password'] == "") {
-            $message = "Username field is empty";
-        } else {
-            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        }
-        if ($username && $password) {
 
-            $login_dup = Database::getInstance()->verify_duplicates($login_array, $_POST['username'], "username");
+        if (empty($_POST['password'])) {
+            include("./view/header.php");
+            $message = "Password field is empty";
+            include("./view/login.php");
+            include("./view/footer.php");
+            exit();
+        } else {
+            $hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        }
+        if ($username && $hash) {
+            $hash_dup = Database::getInstance()->verify_duplicates($hash_db, $hash);
+            print_r($login_dup);
             if ($login_dup == 0)
             {
-                $message =  "Username or password incorrect";
+                include("./view/header.php");
+                $message = "Wrong username";
+                include("./view/login.php");
+                include("./view/footer.php");
+                exit();
+            } else if ($hash_dup == 0) {
+                include("./view/header.php");
+                $message = "Wrong password";
+                include("./view/login.php");
+                include("./view/footer.php");
                 exit();
             } else {
                 $_SESSION['login'] = $username;
             }
-            // if (password_verify($_POST['password'], return_hash($_POST['username'])) {
-            //     echo 'Le mot de passe est valide !';
-            // } else {
-            //     echo 'Le mot de passe est invalide.';
-            // }
-            // echo "Bienvenue $username !";
-            // }
         }
         else {
             $message = "Wrong ID";
@@ -64,47 +73,63 @@ if ($action == "logout")
 if ($action == "signin")
 {
     if (isset($_POST['submit'])) {
-        if ($_POST['password'] == $_POST['confirm_password']) {
-            $login_dup = Database::getInstance()->verify_duplicates($login_array, $_POST['username'], "username");
-            if ($login_dup == 1) {
-                include("./view/header.php");
-                $message = "Username already taken";
-                include("./view/signin.php");
-                include("./view/footer.php");
-                exit();
-            }
-            $email_dup = Database::getInstance()->verify_duplicates($email_array, $_POST['email'], "email");
-            if ($email_dup == 1) {
-                include("./view/header.php");
-                $message = "Email already exists";
-                include("./view/signin.php");
-                include("./view/footer.php");
-                exit();
-            }
-            $username = $_POST['username'];
-            $email = $_POST['email'];
-            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-            if ($username && $password && $email) {
-                $_SESSION['email'] = $email;
-                $_SESSION['login'] = $username;
-                Database::getInstance()->request("INSERT INTO user (email, username, hash) VALUES ($email, $username, $password)");
-                // $req_prep = $db->prepare("INSERT INTO user (email, username, hash) VALUES (:email, :username, :hash)");
-                // $req_prep->bindParam(':username', $username);
-                // $req_prep->bindParam(':email', $email);
-                // $req_prep->bindParam(':hash', $password);
-                // $req_prep->execute();
-                // $message = "Bienvenue $username !";
-                // ENVOYER EMAIL
-            }
+        if (empty($_POST['password'])) {
+            include("./view/header.php");
+            $message = "Password field is empty";
+            include("./view/signin.php");
+            include("./view/footer.php");
+            exit();
+        }
+        if (($_POST['password'] !== $_POST['confirm_password'])) {
+            include("./view/header.php");
+            $message = "Password don't match";
+            include("./view/signin.php");
+            include("./view/footer.php");
+            exit();
+        }
+        if (empty($_POST['username'])) {
+            include("./view/header.php");
+            $message = "Username is empty";
+            include("./view/signin.php");
+            include("./view/footer.php");
+            exit();
+        }
+        if (Database::getInstance()->verify_duplicates($login_db, $_POST['username'])) {
+            include("./view/header.php");
+            $message = "Username already taken";
+            include("./view/signin.php");
+            include("./view/footer.php");
+            exit();
+        }
+        if (empty($_POST['email'])) {
+            include("./view/header.php");
+            $message = "Email is empty";
+            include("./view/signin.php");
+            include("./view/footer.php");
+            exit();
+        }
+        if (Database::getInstance()->verify_duplicates($email_db, $_POST['email'])) {
+            include("./view/header.php");
+            $message = "Email already exists";
+            include("./view/signin.php");
+            include("./view/footer.php");
+            exit();
+        }
+        $username = $_POST['username'];
+        $email = $_POST['email'];
+        $hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        if ($username && $hash && $email) {
+            $_SESSION['email'] = $email;
+            $_SESSION['login'] = $username;
+            Database::getInstance()->request("INSERT INTO `user` (`id`, `email`, `username`, `hash`) VALUES (NULL, '$email', '$username', '$hash');", false, false);
+            $message = "Bienvenue $username !";
+            // ENVOYER EMAIL
         }
     }
     include("./view/header.php");
     include("./view/signin.php");
     include("./view/footer.php");
 }
-    // if(isset($_SESSION['login'])) {
-    //     header("Location:/");
-    // }
 
 /*------------------------ACCOUNT--------------------------*/
 
