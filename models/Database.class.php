@@ -95,15 +95,17 @@ class Database
     */
     public function verify_duplicates($array_given, $value_to_check)
     {
+        $i = 0;
         if ($array_given == NULL) {
             return(FALSE);
         }
         foreach ($array_given as $key => $value) {
-            if(in_array($value_to_check, $value)) {
+            if (in_array($value_to_check, $array_given)) {
                 return(TRUE);
             } else {
                 return (FALSE);
             }
+            $i++;
         }
         return (FALSE);
     }

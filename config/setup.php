@@ -12,9 +12,9 @@ if(!defined("DB_USER"))
 if(!defined("DB_PASSWORD"))
     define("DB_PASSWORD", "br200991");
 
-include_once("./models/Database.class.php");
+include_once("../models/Database.class.php");
 
-$init = file_get_contents("./config/Camagru.sql");
+$init = file_get_contents("Camagru.sql");
 if ((Database::getInstance()->request($init)) == false) {
-    echo "Successfully connect to the database";
+    echo "Successfully connected to the database";
 }

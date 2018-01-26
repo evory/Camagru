@@ -1,6 +1,4 @@
-<!DOCTYPE html>
 <link rel="stylesheet" href="../view/css/style.css">
-<html>
     <head>
         <meta charset="utf-8">
         <title>login</title>
@@ -13,5 +11,5 @@
             Password : <input type="password" name="password"><br><br>
             <input type="submit" name="submit" value="ok">
         </form>
+        <a href="#">forgot password ?</a>
     </body>
-</html>
