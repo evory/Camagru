@@ -29,7 +29,10 @@ if ($action == "login") {
             include("./view/footer.php");
             exit();
         } else {
-            $hash_user_db = Database::getInstance()->request("SELECT hash FROM user WHERE username = '$username';", false, false);
+            $hash_user_db = Database::getInstance()->request("SELECT hash
+                                                              FROM user
+                                                              WHERE username = '$username';",
+                                                              false, false);
         }
         if ($username && password_verify($_POST['password'], $hash_user_db['hash'])) {
             if (Database::getInstance()->verify_duplicates($login_db, $username) == 0) {
@@ -118,7 +121,9 @@ if ($action == "signin")
         if ($username && $hash && $email) {
             $_SESSION['email'] = $email;
             $_SESSION['login'] = $username;
-            Database::getInstance()->request("INSERT INTO `user` (`id`, `email`, `username`, `hash`) VALUES (NULL, '$email', '$username', '$hash');", false, false);
+            Database::getInstance()->request("INSERT INTO `user` (`id`, `email`, `username`, `hash`)
+                                              VALUES (NULL, '$email', '$username', '$hash');",
+                                              false, false);
             $message = "Bienvenue $username !";
             // ENVOYER EMAIL
         }
@@ -131,19 +136,55 @@ if ($action == "signin")
 /*------------------------ACCOUNT--------------------------*/
 
 if ($action == "account") {
-    $username = $_SESSION['login'];
-    $user_id = Database::getInstance()->request("SELECT id FROM user WHERE username = '$username';", false, false);
-    if (isset($_POST['changeUsername'])) {
-        $new_username = $_POST['changeUsername'];
-        Database::getInstance()->request("UPDATE user SET $new_username WHERE id = $id_user;", false, false);
+    if (isset($_POST['new_username'])) {
+        if (empty($_POST['new_username'])) {
+            include("./view/header.php");
+            $message = "Username is empty";
+            include("./view/account.php");
+            include("./view/footer.php");
+            exit();
+        }
+        if (Database::getInstance()->verify_duplicates($login_db, $_POST['new_username'])) {
+            include("./view/header.php");
+            $message = "Username already taken";
+            include("./view/account.php");
+            include("./view/footer.php");
+            exit();
+        }
+        $new_username = $_POST['new_username'];
+        Database::getInstance()->request("UPDATE `user`
+                                          SET `username` = '$new_username'
+                                          WHERE `user`.`id` = '$user_id';",
+                                          false, false);
+        $_SESSION['login'] = $new_username;
     }
+
+
+
+
+
+
     if (isset($_POST['changeEmail'])) {
+        if (Database::getInstance()->verify_duplicates($email_db, $_POST['new_email'])) {
+            include("./view/header.php");
+            $message = "Email already exists";
+            include("./view/account.php");
+            include("./view/footer.php");
+            exit();
+        } else if (empty($_POST['email'])) {
+            include("./view/header.php");
+            $message = "Email is empty";
+            include("./view/signin.php");
+            include("./view/footer.php");
+            exit();
+        }
+    }
+    if (isset($_POST['new_password'])) {
 
     }
-    if (isset($_POST['changePassword'])) {
-
-    }
+    include("./view/header.php");
     include("./view/account.php");
+    include("./view/footer.php");
 }
 
 ?>

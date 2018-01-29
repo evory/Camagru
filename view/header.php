@@ -20,9 +20,10 @@
             echo '<li class="header_menu_btn"><a href="/user/signin">Sign in</a></li>';
         }
         else {
-			echo '<li class="header_menu_btn"><a href="/user/account">	Account</a></li>';
+			echo '<li class="header_menu_btn"><a href="/user/account">Account</a></li>';
             echo '<li class="header_menu_btn"><a href="/user/logout">Log out</a></li>';
         }
+		echo '<li class="header_menu_btn">Bienvenue ' . $username . ' </li>';
         ?>
     </div>
 </div>
