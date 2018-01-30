@@ -158,27 +158,33 @@ if ($action == "account") {
                                           false, false);
         $_SESSION['login'] = $new_username;
     }
-
-
-
-
-
-
-    if (isset($_POST['changeEmail'])) {
+    if (isset($_POST['new_email'])) {
+        if (empty($_POST['new_email'])) {
+            include("./view/header.php");
+            $message = "Email field is empty";
+            include("./view/account.php");
+            include("./view/footer.php");
+            exit();
+        }
         if (Database::getInstance()->verify_duplicates($email_db, $_POST['new_email'])) {
             include("./view/header.php");
             $message = "Email already exists";
             include("./view/account.php");
             include("./view/footer.php");
             exit();
-        } else if (empty($_POST['email'])) {
-            include("./view/header.php");
-            $message = "Email is empty";
-            include("./view/signin.php");
-            include("./view/footer.php");
-            exit();
         }
+        $new_email = $_POST['new_email'];
+        Database::getInstance()->request("UPDATE `user`
+                                          SET `username` = '$new_email'
+                                          WHERE `user`.`id` = '$user_id';",
+                                          false, false);
+        // $_SESSION['login'] = $new_username;
     }
+
+
+
+
+
     if (isset($_POST['new_password'])) {
 
     }
@@ -186,5 +192,22 @@ if ($action == "account") {
     include("./view/account.php");
     include("./view/footer.php");
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ?>
