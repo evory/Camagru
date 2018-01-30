@@ -3,7 +3,7 @@
 require_once('./models/user_infos.php');
 require_once('./models/Database.class.php');
 
-/*-------------------------LOGIN-------------------------*/
+/*----------------------------------LOGIN-------------------------------------*/
 
 if ($action == "login") {
     if (isset($_POST['submit'])) {
@@ -60,7 +60,7 @@ if ($action == "login") {
     include("./view/footer.php");
 }
 
-/*-------------------------LOGOUT-------------------------*/
+/*-----------------------------------LOGOUT-----------------------------------*/
 
 if ($action == "logout")
 {
@@ -68,7 +68,7 @@ if ($action == "logout")
     header("Location:/");
 }
 
-/*-------------------------SIGNIN-------------------------*/
+/*-----------------------------------SIGNIN-----------------------------------*/
 
 if ($action == "signin")
 {
@@ -133,9 +133,10 @@ if ($action == "signin")
     include("./view/footer.php");
 }
 
-/*------------------------ACCOUNT--------------------------*/
+/*---------------------------------ACCOUNT------------------------------------*/
 
 if ($action == "account") {
+/*-----------Username-----------*/
     if (isset($_POST['new_username'])) {
         if (empty($_POST['new_username'])) {
             include("./view/header.php");
@@ -158,6 +159,8 @@ if ($action == "account") {
                                           false, false);
         $_SESSION['login'] = $new_username;
     }
+
+/*------------Email------------*/
     if (isset($_POST['new_email'])) {
         if (empty($_POST['new_email'])) {
             include("./view/header.php");
@@ -175,34 +178,59 @@ if ($action == "account") {
         }
         $new_email = $_POST['new_email'];
         Database::getInstance()->request("UPDATE `user`
-                                          SET `username` = '$new_email'
+                                          SET `email` = '$new_email'
                                           WHERE `user`.`id` = '$user_id';",
                                           false, false);
         // $_SESSION['login'] = $new_username;
     }
 
+/*----------Password-----------*/
 
 
 
 
-    if (isset($_POST['new_password'])) {
 
+
+
+    if ($_POST['changePassword'] == "ok") {
+        if (($_POST['new_password'] !== $_POST['confirm_new_password'])) {
+            include("./view/header.php");
+            $message = "Password don't match";
+            include("./view/account.php");
+            include("./view/footer.php");
+            exit();
+        }
+        if (empty($_POST['old_password'])) {
+            include("./view/header.php");
+            $message = "Old password filed is empty";
+            include("./view/account.php");
+            include("./view/footer.php");
+            exit();
+        }
+
+        $hash_user_db = Database::getInstance()->request("SELECT hash
+                                                          FROM user
+                                                          WHERE username = '$username';",
+                                                          false, false);
+        if ((password_verify($_POST['old_password'], $hash_user_db['hash'])) == FALSE) {
+            include("./view/header.php");
+            $message = "Old password dosen't match";
+            include("./view/account.php");
+            include("./view/footer.php");
+            exit();
+            }
+        $new_hash = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
+        Database::getInstance()->request("UPDATE `user`
+                                          SET `hash` = '$new_hash'
+                                          WHERE `user`.`id` = '$user_id';",
+                                          false, false);
+        $message = "Password has been updated";
     }
+
     include("./view/header.php");
     include("./view/account.php");
     include("./view/footer.php");
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
