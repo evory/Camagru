@@ -13,7 +13,7 @@
     </form>
     <form class="form" action="" method="post">
         <h1>change your email address</h1>
-        Username : <input type="text" name="new_email"><br><br>
+        New Email : <input type="text" name="new_email"><br><br>
         <input type="submit" name="changeEmail" value="ok">
     </form>
     <form class="form" action="" method="post">

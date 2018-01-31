@@ -125,7 +125,8 @@ if ($action == "signin")
                                               VALUES (NULL, '$email', '$username', '$hash');",
                                               false, false);
             $message = "Bienvenue $username !";
-            // ENVOYER EMAIL
+            // $email = new Email();
+            // $email->welcomeEmail($user_email);
         }
     }
     include("./view/header.php");
@@ -181,15 +182,9 @@ if ($action == "account") {
                                           SET `email` = '$new_email'
                                           WHERE `user`.`id` = '$user_id';",
                                           false, false);
-        // $_SESSION['login'] = $new_username;
     }
 
 /*----------Password-----------*/
-
-
-
-
-
 
 
     if ($_POST['changePassword'] == "ok") {
@@ -232,6 +227,9 @@ if ($action == "account") {
     include("./view/footer.php");
 }
 
+/*---------------------------------MAIL-SIGNIN--------------------------------*/
+
+/*-------------------------------FORGOT PASSWORD------------------------------*/
 
 
 
