@@ -2,6 +2,7 @@
 
 require_once('./models/user_infos.php');
 require_once('./models/Database.class.php');
+require_once('./models/Mail.class.php');
 
 /*----------------------------------LOGIN-------------------------------------*/
 
@@ -125,8 +126,11 @@ if ($action == "signin")
                                               VALUES (NULL, '$email', '$username', '$hash');",
                                               false, false);
             $message = "Bienvenue $username !";
-            // $email = new Email();
-            // $email->welcomeEmail($user_email);
+
+/*---------Welcome-Email---------*/
+
+            $send_email = new Email();
+            $send_email->welcomeEmail('bryanbrandt67@gmail.com');
         }
     }
     include("./view/header.php");
@@ -221,19 +225,13 @@ if ($action == "account") {
                                           false, false);
         $message = "Password has been updated";
     }
-
     include("./view/header.php");
     include("./view/account.php");
     include("./view/footer.php");
 }
 
 /*---------------------------------MAIL-SIGNIN--------------------------------*/
-
-/*-------------------------------FORGOT PASSWORD------------------------------*/
-
-
-
-
+/*-------------------------------FORGOT-PASSWORD------------------------------*/
 
 
 ?>

@@ -12,29 +12,8 @@
 			</div>
 			<div class="content">
 				<div class="content_camera">
-					<video autoplay="true" id="videoElement">
-						<script>
-						var video = document.querySelector("#videoElement");
-
-						navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
-
-						if (navigator.getUserMedia) {
-							navigator.getUserMedia({video: true}, handleVideo, videoError);
-						}
-
-						function handleVideo(stream) {
-							video.src = window.URL.createObjectURL(stream);
-						}
-
-						function videoError(e) {
-							// do something
-						}
-						</script>
-					</video>
 				</div>
-				<button type="submit" class="content_capture_btn">
-					SNAP
-				</button>
+				<input class="content_capture_btn" type="button" value="Snap" onclick="onclick();" />
 				<div class="content_stickers">
 				</div>
 			</div>
