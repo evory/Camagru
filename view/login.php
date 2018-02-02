@@ -11,5 +11,5 @@
             Password : <input type="password" name="password"><br><br>
             <input type="submit" name="submit" value="ok">
         </form>
-        <a href="#">forgot password ?</a>
+        <a href="forgot_password">forgot password ?</a>
     </body>

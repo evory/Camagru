@@ -130,7 +130,7 @@ if ($action == "signin")
 /*---------Welcome-Email---------*/
 
             $send_email = new Email();
-            $send_email->welcomeEmail('bryanbrandt67@gmail.com');
+            $send_email->welcomeEmail($email);
         }
     }
     include("./view/header.php");
@@ -230,8 +230,47 @@ if ($action == "account") {
     include("./view/footer.php");
 }
 
-/*---------------------------------MAIL-SIGNIN--------------------------------*/
 /*-------------------------------FORGOT-PASSWORD------------------------------*/
+print_r($action);
+if ($action == "forgot_password") {
+    if ($_POST['forgotPasswordEmail'] == "ok") {
+        if (empty($_POST['forgot_password_email'])) {
+            include("./view/header.php");
+            $message = "Email filed is empty";
+            include("./view/forgot_password.php");
+            include("./view/footer.php");
+            exit();
+        }
+        if ((Database::getInstance()->verify_duplicates($email_db, $_POST['forgot_password_email'])) == 0) {
+            include("./view/header.php");
+            $message = "Email dosen't exists";
+            include("./view/forgot_password.php");
+            include("./view/footer.php");
+            exit();
+        }
+
+    }
+    include("./view/header.php");
+    include("./view/forgot_password.php");
+    include("./view/footer.php");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ?>

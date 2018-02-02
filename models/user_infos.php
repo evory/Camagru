@@ -31,14 +31,17 @@ if (isset($_SESSION['login'])) {
                                                  FROM user
                                                  WHERE username = '$username';",
                                                  false, false);
-    $user_id = current($user_id);
+    if (!empty($user_id)) {
+        $user_id = current($user_id);
+    }
 }
 $user_email = Database::getInstance()->request("SELECT email
                                              FROM user
                                              WHERE username = '$username';",
                                              false, false);
-$user_email = current($user_email);
-
+if (!empty($user_email)) {
+    $user_email = current($user_email);
+}
 
 echo "SESSION = " . print_r($_SESSION, $return = true);
 echo "<br>";
