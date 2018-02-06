@@ -10,10 +10,10 @@ class Email {
 
     }
 
-    public function welcomeEmail($to) {
+    public function welcomeEmail($to, $confirm_token, $new_user) {
         $headers  = 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-        $welcome_email = "welcome on camagru ! <a href=\"http://localhost:8081\">Return to the website</a>";
+        $welcome_email = "welcome on camagru ! <a href=\"http://localhost:8081/user/confirm_account?confirm_token=$confirm_token&new_user=$new_user&new_user_email=$to\">Confirm your account</a>";
         if(mail($to, 'Welcome on Camagru !', $welcome_email, $headers)){
             $message = "Email envoyé avec succès.";
         } else {

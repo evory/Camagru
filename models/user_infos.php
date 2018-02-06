@@ -61,6 +61,13 @@ $htoken_db = Database::getInstance()->request('SELECT htoken
                                              false, true);
 $htoken_db = array_map('current', $htoken_db);
 
+/*--------------------------------------------------------*/
+
+$confirm_token_db = Database::getInstance()->request('SELECT confirm_token
+                                             FROM user;',
+                                             false, true);
+$confirm_token_db = array_map('current', $confirm_token_db);
+
 
 // echo "SESSION = " . print_r($_SESSION, $return = true);
 // echo "<br>";

@@ -63,16 +63,14 @@ if ($action == "login") {
 
 /*-----------------------------------LOGOUT-----------------------------------*/
 
-if ($action == "logout")
-{
+if ($action == "logout") {
     session_destroy();
     header("Location:/");
 }
 
 /*-----------------------------------SIGNIN-----------------------------------*/
 
-if ($action == "signin")
-{
+if ($action == "signin") {
     if (isset($_POST['submit'])) {
         if (empty($_POST['email'])) {
             include("./view/header.php");
@@ -119,22 +117,39 @@ if ($action == "signin")
         $username = $_POST['username'];
         $email = $_POST['email'];
         $hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        if ($username && $hash && $email) {
-            $_SESSION['email'] = $email;
-            $_SESSION['login'] = $username;
-            Database::getInstance()->request("INSERT INTO `user` (`id`, `email`, `username`, `hash`)
-                                              VALUES (NULL, '$email', '$username', '$hash');",
-                                              false, false);
-            $message = "Bienvenue $username !";
+        $confirm_token = hash("md5", time());
+        $send_email = new Email();
+        $send_email->welcomeEmail($_POST['email'], $confirm_token, $username);
 
-/*---------Welcome-Email---------*/
-
-            $send_email = new Email();
-            $send_email->welcomeEmail($email);
-        }
+        Database::getInstance()->request("INSERT INTO `user` (`id`, `email`, `username`, `hash`, `htoken`, `confirm_token`)
+        VALUES (NULL, '$email', '$username', '$hash', NULL, '$confirm_token');",
+        false, false);
     }
     include("./view/header.php");
     include("./view/signin.php");
+    include("./view/footer.php");
+}
+
+/*---------------------------CONFIRM-ACCOUNT----------------------------------*/
+
+if ($action == "confirm_account") {
+    if ((Database::getInstance()->verify_duplicates($confirm_token_db, $_GET['confirm_token'])) == 1) {
+/*---------select-id-token---------*/
+    $confirm_token = $_GET['confirm_token'];
+    $confirm_token_user_id = current(Database::getInstance()->request("SELECT `id`
+                                                               FROM `user`
+                                                               WHERE `user`.`confirm_token` = '$confirm_token';",
+                                                               false, false));
+/*---------delete-token---------*/
+    Database::getInstance()->request("UPDATE `user`
+                                      SET `confirm_token` = NULL
+                                      WHERE `user`.`id` = '$confirm_token_user_id'",
+                                      false, false);
+    $_SESSION['email'] = $_GET['new_user_email'];
+    $_SESSION['login'] = $_GET['new_user'];
+    }
+    include("./view/header.php");
+    include("./view/confirm_account.php");
     include("./view/footer.php");
 }
 
@@ -281,15 +296,12 @@ if ($action == "new_password") {
                 include("./view/footer.php");
                 exit();
             }
-            $htoken = $_GET['htoken'];
 /*---------select-id-token---------*/
+            $htoken = $_GET['htoken'];
             $chang_pass_id = current(Database::getInstance()->request("SELECT `id`
                                                                FROM `user`
                                                                WHERE `user`.`htoken` = '$htoken';",
                                                                false, false));
-echo $chang_pass_id;
-echo "<br>";
-echo $htoken;
 /*---------set-new-pass---------*/
             $new_hash = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
             Database::getInstance()->request("UPDATE `user`
