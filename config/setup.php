@@ -1,5 +1,4 @@
 <?php
-echo "salut";
 if(!defined("DB_HOST"))
     define("DB_HOST", "localhost");
 

@@ -231,7 +231,6 @@ if ($action == "account") {
 }
 
 /*-------------------------------FORGOT-PASSWORD------------------------------*/
-print_r($action);
 if ($action == "forgot_password") {
     if ($_POST['forgotPasswordEmail'] == "ok") {
         if (empty($_POST['forgot_password_email'])) {
@@ -247,30 +246,67 @@ if ($action == "forgot_password") {
             include("./view/forgot_password.php");
             include("./view/footer.php");
             exit();
+        } else {
+            $htoken = hash("md5", time());
+            $user_email_forgot_pass = $_POST['forgot_password_email'];
+            $send_email = new Email();
+            $send_email->forgotPasswordEmail($_POST['forgot_password_email'], $htoken);
+            Database::getInstance()->request("UPDATE `user`
+                                              SET `htoken` = '$htoken'
+                                              WHERE `user`.`email` = '$user_email_forgot_pass';",
+                                              false, false);
         }
-
     }
     include("./view/header.php");
     include("./view/forgot_password.php");
     include("./view/footer.php");
 }
 
+/*-------------------------------NEW-PASSWORD------------------------------*/
 
+if ($action == "new_password") {
+    if ((Database::getInstance()->verify_duplicates($htoken_db, $_GET['htoken'])) == 1) {
+        if ($_POST['new_recovery_password'] == "ok") {
+            if (empty($_POST['new_password'])) {
+                include("./view/header.php");
+                $message = "new password is empty";
+                include("./view/new_password.php");
+                include("./view/footer.php");
+                exit();
+            }
+            if (($_POST['new_password'] !== $_POST['confirm_new_password'])) {
+                include("./view/header.php");
+                $message = "Passwords don't match";
+                include("./view/new_password.php");
+                include("./view/footer.php");
+                exit();
+            }
+            $htoken = $_GET['htoken'];
+/*---------select-id-token---------*/
+            $chang_pass_id = current(Database::getInstance()->request("SELECT `id`
+                                                               FROM `user`
+                                                               WHERE `user`.`htoken` = '$htoken';",
+                                                               false, false));
+echo $chang_pass_id;
+echo "<br>";
+echo $htoken;
+/*---------set-new-pass---------*/
+            $new_hash = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
+            Database::getInstance()->request("UPDATE `user`
+                                              SET `hash` = '$new_hash'
+                                              WHERE `user`.`htoken` = '$htoken';",
+                                              false, false);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-?>
+/*---------delete-token---------*/
+            Database::getInstance()->request("UPDATE `user`
+                                              SET `htoken` = NULL
+                                              WHERE `user`.`id` = '$chang_pass_id';",
+                                              false, false);
+        }
+    } else {
+        echo "invalid token";
+    }
+    include("./view/header.php");
+    include("./view/new_password.php");
+    include("./view/footer.php");
+}

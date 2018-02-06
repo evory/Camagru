@@ -14,7 +14,8 @@ CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `email` varchar(50) NOT NULL,
   `username` varchar(20) NOT NULL,
-  `hash` varchar(60) NOT NULL
+  `hash` varchar(60) NOT NULL,
+  `htoken` varchar(60) NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
