@@ -1,7 +1,5 @@
 <?php
 
-require("./config/db-config.php");
-
 /*
 *   Classe de gestion de la base de donnée
 */
@@ -72,7 +70,9 @@ class Database
                     $statement->bindValue(':' .$key, $value, $dataType);
                 }
             }
-            $statement->execute();
+            var_dump($statement);
+            echo "<br>";
+            var_dump($statement->execute());
             if($multiple) {
                 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
             } else {

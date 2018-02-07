@@ -69,15 +69,15 @@ $confirm_token_db = Database::getInstance()->request('SELECT confirm_token
 $confirm_token_db = array_map('current', $confirm_token_db);
 
 
-// echo "SESSION = " . print_r($_SESSION, $return = true);
-// echo "<br>";
-// echo "POST = " . print_r($_POST, $return = true);
-// echo "<br>";
-// echo "username = " . print_r($username, $return = true);
-// echo "<br>";
-// echo "user_id = " . print_r($user_id, $return = true);
-// echo "<br>";
-// echo "new_username = " . print_r($new_username, $return = true);
-// echo "<br>";
-// echo "email = " . print_r($user_email, $return = true);
-// echo "<br>";
+echo "SESSION = " . print_r($_SESSION, $return = true);
+echo "<br>";
+echo "POST = " . print_r($_POST, $return = true);
+echo "<br>";
+echo "username = " . print_r($username, $return = true);
+echo "<br>";
+echo "user_id = " . print_r($user_id, $return = true);
+echo "<br>";
+echo "new_username = " . print_r($new_username, $return = true);
+echo "<br>";
+echo "email = " . print_r($user_email, $return = true);
+echo "<br>";

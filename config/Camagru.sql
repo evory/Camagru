@@ -3,31 +3,23 @@ SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-  -- A rajouter dans export SQL
-
 CREATE DATABASE Camagru;
-USE Camagru;
+use Camagru;
 
-    -- Fin
-
-CREATE TABLE `user` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `email` varchar(50) NOT NULL,
-    `username` varchar(20) NOT NULL,
-    `hash` varchar(60) NOT NULL,
-    `htoken` varchar(60) NULL,
-    `confirm_token` varchar(60) NULL )
-    ENGINE=InnoDB
-    DEFAULT CHARSET=utf8;
-    ALTER TABLE `user`
-    ADD PRIMARY KEY (`id`);
-
-
-CREATE TABLE `Camagru`.`picture` (
-    `username` VARCHAR(255) NOT NULL ,
-    `pics` TEXT NOT NULL ,
-    `likes` INT NOT NULL ,
-    `time` DATETIME NOT NULL )
+CREATE TABLE IF NOT EXISTS `user` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `username` VARCHAR(50) NOT NULL,
+    `email` VARCHAR(50) NOT NULL,
+    `hash` VARCHAR(60) NULL,
+    `htoken` VARCHAR(60) NOT NULL,
+    `confirm_token` VARCHAR(60) NOT NULL,
+    PRIMARY KEY (`id`));
     ENGINE = InnoDB;
-    DEFAULT CHARSET=utf8
-COMMIT;
+    COMMIT;
+-- CREATE TABLE IF NOT EXISTS `picture` (
+--     `username` VARCHAR NOT NULL,
+--     `pics` TEXT NOT NULL,
+--     `text` TEXT NULL,
+--     `likes` INT NOT NULL,
+--     `time` DATETIME NOT NULL);
+--     ENGINE=InnoDB DEFAULT CHARSET=utf8;

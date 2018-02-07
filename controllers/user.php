@@ -72,6 +72,7 @@ if ($action == "logout") {
 
 if ($action == "signin") {
     if (isset($_POST['submit'])) {
+/*-------check-if-empty-email-------*/
         if (empty($_POST['email'])) {
             include("./view/header.php");
             $message = "Email is empty";
@@ -79,6 +80,7 @@ if ($action == "signin") {
             include("./view/footer.php");
             exit();
         }
+/*-------check-if-email-exist-------*/
         if (Database::getInstance()->verify_duplicates($email_db, $_POST['email'])) {
             include("./view/header.php");
             $message = "Email already exists";
@@ -86,6 +88,7 @@ if ($action == "signin") {
             include("./view/footer.php");
             exit();
         }
+/*------check-if-empty-username-------*/
         if (empty($_POST['username'])) {
             include("./view/header.php");
             $message = "Username is empty";
@@ -93,6 +96,7 @@ if ($action == "signin") {
             include("./view/footer.php");
             exit();
         }
+/*-------check-if-username-exist-------*/
         if (Database::getInstance()->verify_duplicates($login_db, $_POST['username'])) {
             include("./view/header.php");
             $message = "Username already taken";
@@ -100,6 +104,7 @@ if ($action == "signin") {
             include("./view/footer.php");
             exit();
         }
+/*---------check-if-empty-pass---------*/
         if (empty($_POST['password'])) {
             include("./view/header.php");
             $message = "Password field is empty";
@@ -107,6 +112,7 @@ if ($action == "signin") {
             include("./view/footer.php");
             exit();
         }
+/*-----------check-pass-match----------*/
         if (($_POST['password'] !== $_POST['confirm_password'])) {
             include("./view/header.php");
             $message = "Password don't match";
@@ -289,6 +295,7 @@ if ($action == "new_password") {
                 include("./view/footer.php");
                 exit();
             }
+/*---------check-pass-match---------*/
             if (($_POST['new_password'] !== $_POST['confirm_new_password'])) {
                 include("./view/header.php");
                 $message = "Passwords don't match";
