@@ -16,6 +16,11 @@ if ($action == "login") {
             exit();
         } else if (Database::getInstance()->verify_duplicates($login_db, $_POST['username'])) {
             $username = $_POST['username'];
+            $check_conf_token = Database::getInstance()->request("SELECT confirm_token
+                    FROM user
+                    WHERE username = '$username';",
+                    false, false);
+            var_dump($check_conf_token);
         } else {
             include("./view/header.php");
             $message = "Wrong username";
@@ -42,12 +47,19 @@ if ($action == "login") {
                 include("./view/login.php");
                 include("./view/footer.php");
                 exit();
-            } else {
+            } else if (empty($check_conf_token)) {
+                include("./view/header.php");
+                $message = "Please verify your email";
+                include("./view/login.php");
+                include("./view/footer.php");
+                exit();
+            }
+            else {
                 $_SESSION['login'] = $username;
             }
         }
         else {
-            $message = "Wrong ID";
+            $message = "Password or username is wrong !";
         }
     }
     include("./view/header.php");
