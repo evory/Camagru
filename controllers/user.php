@@ -42,12 +42,6 @@ if ($action == "login") {
                 include("./view/login.php");
                 include("./view/footer.php");
                 exit();
-            } else if ($hash_dup) {
-                include("./view/header.php");
-                $message = "Wrong password";
-                include("./view/login.php");
-                include("./view/footer.php");
-                exit();
             } else {
                 $_SESSION['login'] = $username;
             }

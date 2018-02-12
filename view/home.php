@@ -1,7 +1,7 @@
 		<div class="all-middle-content">
 			<div class="sidebar">
+				<?=$message ?>
 				<div class="sidebar_title">
-					<?=$message ?>
 					<h3>Snap</h3>
 				</div>
 				<canvas class="sidebar_canvas">

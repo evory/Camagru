@@ -10,13 +10,14 @@ CREATE TABLE IF NOT EXISTS `user` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
     `username` VARCHAR(50) NOT NULL,
     `email` VARCHAR(50) NOT NULL,
-    `hash` VARCHAR(60) NULL,
-    `htoken` VARCHAR(60) NOT NULL,
-    `confirm_token` VARCHAR(60) NOT NULL,
+    `hash` VARCHAR(60) NOT NULL,
+    `htoken` VARCHAR(60) NULL,
+    `confirm_token` VARCHAR(60) NULL,
     PRIMARY KEY (`id`));
     ENGINE = InnoDB;
     COMMIT;
--- CREATE TABLE IF NOT EXISTS `picture` (
+
+-- CREATE TABLE IF NOT EXISTS `pictures` (
 --     `username` VARCHAR NOT NULL,
 --     `pics` TEXT NOT NULL,
 --     `text` TEXT NULL,

@@ -4,6 +4,9 @@
 *   Classe de gestion de la base de donnée
 */
 
+$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+include "$root/config/db-config.php";
+
 class Database
 {
     /** Instance de PDO */
@@ -70,9 +73,7 @@ class Database
                     $statement->bindValue(':' .$key, $value, $dataType);
                 }
             }
-            var_dump($statement);
-            echo "<br>";
-            var_dump($statement->execute());
+            $statement->execute();
             if($multiple) {
                 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
             } else {
@@ -80,7 +81,6 @@ class Database
             }
         $statement->closeCursor();
         return($result);
-
         } catch (Exception $e) {
             exit($e->getMessage());
         }

@@ -80,4 +80,3 @@ echo "<br>";
 echo "new_username = " . print_r($new_username, $return = true);
 echo "<br>";
 echo "email = " . print_r($user_email, $return = true);
-echo "<br>";
