@@ -17,10 +17,4 @@ CREATE TABLE IF NOT EXISTS `user` (
     ENGINE = InnoDB;
     COMMIT;
 
--- CREATE TABLE IF NOT EXISTS `pictures` (
---     `username` VARCHAR NOT NULL,
---     `pics` TEXT NOT NULL,
---     `text` TEXT NULL,
---     `likes` INT NOT NULL,
---     `time` DATETIME NOT NULL);
---     ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- CREATE TABLE `Camagru`.`pictures` ( `username` VARCHAR(255) NOT NULL , `pics` TEXT NOT NULL , `text` VARCHAR(255) NULL , `likes` INT(5) NULL , `time` TEXT NOT NULL ) ENGINE = InnoDB;
