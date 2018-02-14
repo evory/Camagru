@@ -159,8 +159,6 @@ if ($action == "confirm_account") {
                                       SET `confirm_token` = NULL
                                       WHERE `user`.`id` = '$confirm_token_user_id'",
                                       false, false);
-    $_SESSION['email'] = $_GET['new_user_email'];
-    $_SESSION['login'] = $_GET['new_user'];
     }
     include("./view/header.php");
     include("./view/confirm_account.php");

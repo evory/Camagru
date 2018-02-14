@@ -41,12 +41,9 @@ if ($action == "upload_pic") {
         } else {
             $message = "Problem uploading image";
         }
-
-
         $tab = Database::getInstance()->request("SELECT * FROM pictures;",
         false, true);
         $tab = current($tab);
-        print_r($description);
         echo "<div id='img_div'>";
             echo "<img src ='".$root."/view/images/".$image."'>";
             echo "<p>".$descritpion."</p>";

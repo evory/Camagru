@@ -13,11 +13,10 @@ CREATE TABLE IF NOT EXISTS `user` (
     `hash` VARCHAR(60) NOT NULL,
     `htoken` VARCHAR(60) NULL,
     `confirm_token` VARCHAR(60) NULL,
-    PRIMARY KEY (`id`));
+    PRIMARY KEY (`id`))
     ENGINE = InnoDB;
-    COMMIT;
 
-CREATE TABLE `Camagru`.`pictures` (
+CREATE TABLE IF NOT EXISTS `picture` (
     `id_pic` INT(10) NOT NULL AUTO_INCREMENT ,
     `username` VARCHAR(255) NOT NULL ,
     `pics` TEXT NOT NULL ,
