@@ -136,6 +136,8 @@ if ($action == "signin") {
         Database::getInstance()->request("INSERT INTO `user` (`id`, `email`, `username`, `hash`, `htoken`, `confirm_token`)
         VALUES (NULL, '$email', '$username', '$hash', NULL, '$confirm_token');",
         false, false);
+
+        $message = "An email as been send to your your email address, please confirm yor address to cotinue";
     }
     include("./view/header.php");
     include("./view/signin.php");

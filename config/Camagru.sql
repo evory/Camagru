@@ -17,4 +17,12 @@ CREATE TABLE IF NOT EXISTS `user` (
     ENGINE = InnoDB;
     COMMIT;
 
--- CREATE TABLE `Camagru`.`pictures` ( `username` VARCHAR(255) NOT NULL , `pics` TEXT NOT NULL , `text` VARCHAR(255) NULL , `likes` INT(5) NULL , `time` TEXT NOT NULL ) ENGINE = InnoDB;
+CREATE TABLE `Camagru`.`pictures` (
+    `id_pic` INT(10) NOT NULL AUTO_INCREMENT ,
+    `username` VARCHAR(255) NOT NULL ,
+    `pics` TEXT NOT NULL ,
+    `description` VARCHAR(255) NULL ,
+    `like` INT(5) NULL ,
+    `date_time` VARCHAR(255) NOT NULL ,
+    PRIMARY KEY (`id_pic`))
+    ENGINE = InnoDB;
