@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `user` (
     PRIMARY KEY (`id`))
     ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `picture` (
+CREATE TABLE IF NOT EXISTS `pictures` (
     `id_pic` INT(10) NOT NULL AUTO_INCREMENT ,
     `username` VARCHAR(255) NOT NULL ,
     `pics` TEXT NOT NULL ,
@@ -24,4 +24,12 @@ CREATE TABLE IF NOT EXISTS `picture` (
     `like` INT(5) NULL ,
     `date_time` VARCHAR(255) NOT NULL ,
     PRIMARY KEY (`id_pic`))
+    ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `comments` (
+    `id_comment` INT(10) NOT NULL AUTO_INCREMENT ,
+    `username` VARCHAR(255) NOT NULL ,
+    `comment` VARCHAR(255) NOT NULL ,
+    `date_time` VARCHAR(255) NOT NULL ,
+    PRIMARY KEY (`id_comment`))
     ENGINE = InnoDB;

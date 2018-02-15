@@ -10,7 +10,7 @@ if ($controller) {
     require("./controllers/".$controller.".php");
 }
 else {
-    // require("./controllers/home.php");
+    require("./controllers/home.php");
     include("./view/header.php");
     include("./view/home.php");
     include("./view/footer.php");

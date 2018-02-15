@@ -107,7 +107,7 @@ form {
 	height: 1030px;
 	margin-left: 220px;
 	border: 3px solid yellow;
-  margin-top: 20px;
+    margin-top: 20px;
 }
 
 .content_camera {
@@ -117,11 +117,6 @@ form {
   height: 700px;
 }
 
-#videoElement {
-    width: 930px;
-    height: 700px;
-    background-color: #666;
-}
 
 .content_capture_btn {
   width: 100px;

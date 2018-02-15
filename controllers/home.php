@@ -53,4 +53,14 @@ if ($action == "upload_pic") {
     include("./view/upload_pic.php");
     include("./view/footer.php");
 }
+
+
+
+// if (empty($action)) {;
+//
+//     if (!empty($_POST['upload_snap'])) {
+//         var_dump($_POST);
+//     }
+// }
+
 ?>
