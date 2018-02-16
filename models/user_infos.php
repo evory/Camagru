@@ -47,9 +47,9 @@ if (isset($_SESSION['login'])) {
 /*--------------------------------------------------------*/
 
 $user_email = Database::getInstance()->request("SELECT email
-                                             FROM user
-                                             WHERE username = '$username';",
-                                             false, false);
+                                                FROM user
+                                                WHERE username = '$username';",
+                                                false, false);
 if (!empty($user_email)) {
     $user_email = current($user_email);
 }
@@ -57,8 +57,8 @@ if (!empty($user_email)) {
 /*--------------------------------------------------------*/
 
 $htoken_db = Database::getInstance()->request('SELECT htoken
-                                             FROM user;',
-                                             false, true);
+                                               FROM user;',
+                                               false, true);
 $htoken_db = array_map('current', $htoken_db);
 
 /*--------------------------------------------------------*/
@@ -69,14 +69,6 @@ $confirm_token_db = Database::getInstance()->request('SELECT confirm_token
 $confirm_token_db = array_map('current', $confirm_token_db);
 
 
-echo "SESSION = " . print_r($_SESSION, $return = true);
-echo "<br>";
-echo "POST = " . print_r($_POST, $return = true);
-echo "<br>";
-echo "username = " . print_r($username, $return = true);
-echo "<br>";
-echo "user_id = " . print_r($user_id, $return = true);
-echo "<br>";
-echo "new_username = " . print_r($new_username, $return = true);
-echo "<br>";
-echo "email = " . print_r($user_email, $return = true);
+$allPictures = Database::getInstance()->request('SELECT *
+                                                 FROM pictures;',
+                                                 false, true);

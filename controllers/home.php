@@ -1,5 +1,6 @@
 <?php
 
+require_once('./models/user_infos.php');
 require_once('./models/Database.class.php');
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 
@@ -25,14 +26,6 @@ if ($action == "upload_pic") {
             include("./view/footer.php");
             exit();
         }
-        // print_r($_SESSION['login']);
-        // echo "<br>";
-        // print_r($image);
-        // echo "<br>";
-        // print_r($description);
-        // echo "<br>";
-        // print_r($date_time);
-        // echo "<br>";
         if (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
             $message = "Image uploaded";
             Database::getInstance()->request("INSERT INTO pictures (username, pics, description, date_time)
@@ -54,8 +47,6 @@ if ($action == "upload_pic") {
     include("./view/footer.php");
 }
 
-
-
 // if (empty($action)) {;
 //
 //     if (!empty($_POST['upload_snap'])) {
@@ -63,4 +54,26 @@ if ($action == "upload_pic") {
 //     }
 // }
 
+if ($action == "gallery") {
+    include("./view/header.php");
+    include("./view/gallery.php");
+    for ($i=0; $allPictures[$i]; $i++) {
+        $pic_id = $allPictures[$i]['id_pic'];
+        $pic_username = $allPictures[$i]['username'];
+        $pic_name = $allPictures[$i]['pics'];
+        $pic_time = $allPictures[$i]['date_time'];
+        echo "posted by $pic_username the $pic_time";
+        echo '
+             <tr>
+                  <td>
+                       <img src="'.("http://localhost:8081/view/images/$pic_name").'" height="200" width="200" class="img-thumnail" />
+                  </td>
+                  <textarea name="description" rows="4" cols="40" placeholder="Comment"></textarea>
+                  <input type="submit" name="sendComment" value="ok">
+                  <a href="#">like</a>
+             </tr>';
+             echo "<br>";
+    }
+    include("./view/footer.php");
+}
 ?>
