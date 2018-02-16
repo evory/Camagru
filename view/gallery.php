@@ -1,5 +1,8 @@
 <link rel="stylesheet" href="../view/css/style.css">
 
+<h1>Gallery</h1>
+<?= $message ?>
+<!--
 <script>
 $(document).ready(function(){
      $('#insert').click(function(){
@@ -21,4 +24,4 @@ $(document).ready(function(){
           }
      });
 });
-</script>
+</script> -->
