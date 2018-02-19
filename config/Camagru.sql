@@ -3,7 +3,7 @@ SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-CREATE DATABASE Camagru;
+CREATE DATABASE IF NOT EXISTS `Camagru`;
 use Camagru;
 
 CREATE TABLE IF NOT EXISTS `user` (
@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS `pictures` (
 CREATE TABLE IF NOT EXISTS `comments` (
     `id_comment` INT NOT NULL AUTO_INCREMENT ,
     `username` VARCHAR(255) NOT NULL ,
+    `id_pic` INT NOT NULL ,
     `comment` VARCHAR(255) NOT NULL ,
     `date_time` VARCHAR(255) NOT NULL ,
     PRIMARY KEY (`id_comment`))
@@ -38,5 +39,6 @@ CREATE TABLE IF NOT EXISTS `likes` (
     `id_like` INT PRIMARY KEY AUTO_INCREMENT,
 	`id_pic` INT NOT NULL,
 	`username` VARCHAR(255) NOT NULL,
-	`date_creation` VARCHAR(255) NOT NULL);
+	`date_creation` VARCHAR(255) NOT NULL),
+    CONSTRAINT uc_image_liker UNIQUE (`id_pic`, `username`);
     ENGINE = InnoDB;

@@ -20,7 +20,6 @@ if ($action == "login") {
                     FROM user
                     WHERE username = '$username';",
                     false, false);
-            var_dump($check_conf_token);
         } else {
             include("./view/header.php");
             $message = "Wrong username";
@@ -168,7 +167,7 @@ if ($action == "confirm_account") {
 /*---------------------------------ACCOUNT------------------------------------*/
 
 if ($action == "account") {
-/*-----------Username-----------*/
+/*----------change-username---------*/
     if (isset($_POST['new_username'])) {
         if (empty($_POST['new_username'])) {
             include("./view/header.php");
@@ -184,15 +183,29 @@ if ($action == "account") {
             include("./view/footer.php");
             exit();
         }
+        $old_username = $_SESSION['login'];
         $new_username = $_POST['new_username'];
         Database::getInstance()->request("UPDATE `user`
                                           SET `username` = '$new_username'
                                           WHERE `user`.`id` = '$user_id';",
                                           false, false);
+/*----change-username-in-all-db----*/
+        Database::getInstance()->request("UPDATE `pictures`
+                                          SET `username` = '$new_username'
+                                          WHERE `pictures`.`username` = '$old_username';",
+                                          false, false);
+        Database::getInstance()->request("UPDATE `likes`
+                                          SET `username` = '$new_username'
+                                          WHERE `likes`.`username` = '$old_username';",
+                                          false, false);
+        Database::getInstance()->request("UPDATE `comments`
+                                          SET `username` = '$new_username'
+                                          WHERE `comments`.`username` = '$old_username';",
+                                          false, false);
         $_SESSION['login'] = $new_username;
     }
 
-/*------------Email------------*/
+/*------------change-email------------*/
     if (isset($_POST['new_email'])) {
         if (empty($_POST['new_email'])) {
             include("./view/header.php");

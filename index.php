@@ -1,6 +1,8 @@
 <?php
 
-session_start();
+if (!isset($_SESSION)) {
+    session_start();
+}
 
 $url = explode("/", $_GET['url']);
 $controller = $url[1];
@@ -11,9 +13,9 @@ if ($controller) {
 }
 else {
     require("./controllers/home.php");
-    include("./view/header.php");
-    include("./view/home.php");
-    include("./view/footer.php");
+    // include("./view/header.php");
+    // include("./view/home.php");
+    // include("./view/footer.php");
 }
 
 ?>

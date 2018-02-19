@@ -5,9 +5,10 @@
 				<div class="sidebar_title">
 					<h3>Snap</h3>
 				</div>
-				<canvas class="sidebar_canvas">
+				<!-- <canvas class="sidebar_canvas">
 
-				</canvas>
+				</canvas> -->
+				<?= $canvas ?>
 				<div class="sidebar_seeall">
 					<a href="#">see all...</a>
 				</div>
