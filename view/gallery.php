@@ -7,8 +7,7 @@
 $(document).ready(function(){
      $('#insert').click(function(){
           var image_name = $('#image').val();
-          if(image_name == '')
-          {
+          if(image_name ==
                alert("Please Select Image");
                return false;
           }

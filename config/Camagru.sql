@@ -38,7 +38,5 @@ CREATE TABLE IF NOT EXISTS `comments` (
 CREATE TABLE IF NOT EXISTS `likes` (
     `id_like` INT PRIMARY KEY AUTO_INCREMENT,
 	`id_pic` INT NOT NULL,
-	`username` VARCHAR(255) NOT NULL,
-	`date_creation` VARCHAR(255) NOT NULL),
-    CONSTRAINT uc_image_liker UNIQUE (`id_pic`, `username`);
+	`username` VARCHAR(255) NOT NULL;
     ENGINE = InnoDB;

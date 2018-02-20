@@ -167,6 +167,7 @@ if ($action == "confirm_account") {
 /*---------------------------------ACCOUNT------------------------------------*/
 
 if ($action == "account") {
+    $log_username = $_SESSION['login'];
 /*----------change-username---------*/
     if (isset($_POST['new_username'])) {
         if (empty($_POST['new_username'])) {
@@ -229,8 +230,6 @@ if ($action == "account") {
     }
 
 /*----------Password-----------*/
-
-
     if ($_POST['changePassword'] == "ok") {
         if (($_POST['new_password'] !== $_POST['confirm_new_password'])) {
             include("./view/header.php");

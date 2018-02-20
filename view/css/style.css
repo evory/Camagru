@@ -3,7 +3,7 @@
 body {
   width: 100%;
   margin: 0 auto;
-	background-color: grey;
+	background-color: #7986CB;
 }
 
 a {
@@ -25,7 +25,7 @@ form {
 	width: 50%;
   min-width: 1000px;
   max-width: 1000px;
-  height: 50px;   
+  height: 50px;
   margin: 0 auto;
 }
 
@@ -72,6 +72,7 @@ form {
   float: left;
 	width: 200px;
 	height: 900px;
+    margin-top: 20px;
 	border: 3px solid orange;
 }
 
@@ -80,18 +81,13 @@ form {
 	font-size: 25px;
 }
 
-.sidebar_canvas {
+.sidebar_img {
 	width: 180px;
-	height: 730px;
-	border: 3px solid brown;
+	height: 130px;
+	border: 1px solid brown;
 	margin-left: 7px;
 }
 
-.sidebar_seeall {
-	font-size: 20px;
-	margin-top: 15px;
-	text-align: center;
-}
 
 /*-----------Content-----------*/
 
@@ -106,50 +102,44 @@ form {
 	width: 1160px;
 	height: 1030px;
 	margin-left: 220px;
-	border: 3px solid yellow;
     margin-top: 20px;
 }
 
 .content_camera {
-  margin-left: 110px;
-  margin-top: 50px;
-  width: 930px;
-  height: 700px;
+    margin-left: 110px;
+    margin-top: 50px;
+    width: 930px;
+    height: 700px;
 }
 
 .content_capture_btn {
-  width: 100px;
-  height: 40px;
-  margin: 10px 10px 10px 530px;
-  background-color: orange;
-  border-radius: 100px;
-  color: white;
+    width: 100px;
+    height: 40px;
+    margin: 10px 10px 10px 530px;
+    background-color: orange;
+    border-radius: 100px;
+    color: white;
 }
 
 .content_capture_btn:hover{
-  width: 100px;
-  height: 40px;
-  margin: 10px 10px 10px 530px;
-  background-color: orange;
-  opacity: 0.8;
-  border-radius: 100px;
-  border: 1px black solid;
-  color: black;
-}
-
-.content_stickers {
-	width: 930px;
-	height: 150px;
-	margin-left: 100px;
-	border: 10px solid white;
-
+    width: 100px;
+    height: 40px;
+    margin: 10px 10px 10px 530px;
+    background-color: orange;
+    opacity: 0.8;
+    border-radius: 100px;
+    border: 1px black solid;
+    color: black;
 }
 
 /*----------Footer----------*/
 
 .footer {
-  text-align: right;
-  margin-right: 30px;
+    text-align: right;
+    bottom: 0;
+    position: fixed;
+    width: 98%;
+
 }
 
 

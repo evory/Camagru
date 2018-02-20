@@ -20,6 +20,7 @@
             echo '<li class="header_menu_btn"><a href="/user/signin">Sign in</a></li>';
         }
         else {
+			echo '<li class="header_menu_btn"><a href="/home/your_pictures">Your pics</a></li>';
 			echo '<li class="header_menu_btn"><a href="/user/account">Account</a></li>';
             echo '<li class="header_menu_btn"><a href="/user/logout">Log out</a></li>';
         }

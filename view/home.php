@@ -3,15 +3,13 @@
 		<div class="all-middle-content">
 			<div class="sidebar">
 				<div class="sidebar_title">
-					<h3>Snap</h3>
+					<h3>Recent snap</h3>
 				</div>
-				<!-- <canvas class="sidebar_canvas">
 
-				</canvas> -->
+				<div>
 				<?= $canvas ?>
-				<div class="sidebar_seeall">
-					<a href="#">see all...</a>
 				</div>
+
 			</div>
 			<div class="content">
 				<div class="content_camera">
@@ -22,8 +20,6 @@
 				</div>
 					<input class="content_capture_btn" id="snapButton" type="button" value="Snap"/>
 					<a href="home/upload_pic">upload file</a>
-				<div class="content_stickers">
-				</div>
 			</div>
 		</div>
 		<script type="text/javascript">
