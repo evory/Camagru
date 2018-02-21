@@ -8,11 +8,11 @@ use Camagru;
 
 CREATE TABLE IF NOT EXISTS `user` (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `username` VARCHAR(50) NOT NULL,
-    `email` VARCHAR(50) NOT NULL,
-    `hash` VARCHAR(60) NOT NULL,
-    `htoken` VARCHAR(60) NULL,
-    `confirm_token` VARCHAR(60) NULL,
+    `username` VARCHAR(255) NOT NULL,
+    `email` VARCHAR(255) NOT NULL,
+    `hash` VARCHAR(255) NOT NULL,
+    `htoken` VARCHAR(255) NULL,
+    `confirm_token` VARCHAR(255) NULL,
     PRIMARY KEY (`id`))
     ENGINE = InnoDB;
 
@@ -27,16 +27,17 @@ CREATE TABLE IF NOT EXISTS `pictures` (
     ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `comments` (
-    `id_comment` INT NOT NULL AUTO_INCREMENT ,
-    `username` VARCHAR(255) NOT NULL ,
-    `id_pic` INT NOT NULL ,
-    `comment` VARCHAR(255) NOT NULL ,
-    `date_time` VARCHAR(255) NOT NULL ,
+    `id_comment` INT NOT NULL AUTO_INCREMENT,
+    `username` VARCHAR(255) NOT NULL,
+    `id_pic` INT NOT NULL,
+    `comment` VARCHAR(255) NOT NULL,
+    `date_time` VARCHAR(255) NULL,
     PRIMARY KEY (`id_comment`))
     ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `likes` (
-    `id_like` INT PRIMARY KEY AUTO_INCREMENT,
-	`id_pic` INT NOT NULL,
-	`username` VARCHAR(255) NOT NULL;
+    `id_like` INT NOT NULL AUTO_INCREMENT,
+    `id_pic` INT NOT NULL,
+    `username` VARCHAR(255) NOT NULL,
+    PRIMARY KEY (`id_like`))
     ENGINE = InnoDB;

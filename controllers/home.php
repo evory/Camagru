@@ -43,8 +43,7 @@ if ($action == "upload_pic") {
                 return false;
             }
         }
-    if(isimage()){
-        echo "string";
+    if (isimage()){
         $username_post = $_SESSION['login'];
         $image = $_FILES['image']['name'];
         $description = $_POST['description' ];
@@ -298,13 +297,23 @@ if($action == "your_pictures") {
 }
 
 
+
 /*------------------------------display-own pics------------------------------*/
 
-// if ($action == "modify_picture") {
-//     include("./view/header.php");
-//     include("./view/modify_picture.php");
-//     imagecopymerge(resource $dst_im , resource $src_im , int $dst_x , int $dst_y , int $src_x , int $src_y , int $src_w , int $src_h , int $pct);
-//     include("./view/footer.php");
-// }
+if ($action == "modify_picture") {
+    include("./view/header.php");
+    include("./view/modify_picture.php");
+    $pic_data_64 = $_POST['modify_hidden'];
+    $pic_data_64 = str_replace(' ', '+', $pic_data_64);
+    $pic_data_64 = str_replace('data:image/png;base64,', '', $pic_data_64);
+    $decoded_pic = base64_decode($pic_data_64);
+    $timestamp = time();
+    file_put_contents('view/images/'.$username.'_'.$timestamp.'.png', $decoded_pic);
+
+    echo'<img src="'.("http://localhost:8081/view/images/$username $timestamp").'" height="300" width="400" class="img-thumnail" />';
+
+
+    include("./view/footer.php");
+}
 
 ?>

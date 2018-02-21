@@ -58,8 +58,7 @@ class Database
     public function request($sql, $fields = false, $multiple = false) {
         try {
             $statement = $this->PDOInstance->prepare($sql);
-            if($fields)
-            {
+            if($fields) {
                 foreach ($fields as $key => $value) {
                     if(is_int($value)) {
                         $dataType = PDO::PARAM_INT;
