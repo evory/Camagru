@@ -296,9 +296,20 @@ if($action == "your_pictures") {
     include("./view/footer.php");
 }
 
+/*------------------------------DELETE-MODIFYING-PICTURE----------------------*/
+if (empty($controllers) && empty($action)) {
+    if ($_GET['delete_pic']) {
+        $delete_pic = $_GET['delete_pic'];
+        if (@unlink(''.$root.'/view/images/'.$delete_pic.'')) { // PROBLEME SECU - TOUT LE MONDE PEU DELETE EN CHANGEANT L'URL
+            $message = "picture deleted";
+        } else {
+            $message = "can't find your picture";
+        }
+    }
+}
 
 
-/*------------------------------display-own pics------------------------------*/
+/*------------------------------MODIFY-PICTURE------------------------------*/
 
 if ($action == "modify_picture") {
     include("./view/header.php");
@@ -308,12 +319,66 @@ if ($action == "modify_picture") {
     $pic_data_64 = str_replace('data:image/png;base64,', '', $pic_data_64);
     $decoded_pic = base64_decode($pic_data_64);
     $timestamp = time();
-    file_put_contents('view/images/'.$username.'_'.$timestamp.'.png', $decoded_pic);
+    $current_picture = "'.$username.'_'.$timestamp.'.png'";
+    echo $current_picture;
+    if (!empty($decoded_pic)) {
+        file_put_contents('view/images/'.$username.'_'.$timestamp.'.png', $decoded_pic);
+    }
+    echo'
+        <img src="http://localhost:8081/view/images/' . $username . '_' . $timestamp . '.png" height="600" width="800" class="img-thumnail" />
+        <br>
+        <div class="stickers_div">
+        <a href="modify_picture?sticker=beer.png&img_name='.$username.'_'.$timestamp.'.png"><img class="stickers_img" src="http://localhost:8081/view/stickers/beer.png"></a>
+        <a href="modify_picture?sticker=jo.png"><img class="stickers_img" src="http://localhost:8081/view/stickers/jo.png"></a>
+        <a href="modify_picture?sticker=grass.png"><img class="stickers_img" src="http://localhost:8081/view/stickers/grass.png"></a>
+        <a href="modify_picture?sticker=fire.png"><img class="stickers_img" src="http://localhost:8081/view/stickers/fire.png"></a>
+        <a href="modify_picture?sticker=lizard.png"><img class="stickers_img" src="http://localhost:8081/view/stickers/lizard.png"></a>
+        </div>
+        <form method="post" action="index.php">
+            <input type="hidden" name="publishPicture" value="'.$finalPics.'">
+            <input type="submit" name="sendComment" value="publish">
+        </form>
+        <a class="delete_btn" href="http://localhost:8081?delete_pic=' . $username . '_' . $timestamp . '.png">delete</a>
+        <br>
+        ';
+        if (isset($_GET['sticker'])) {
+            $sticker = $_GET['sticker'];
+            print_r($sticker);
+            $dessous = imagecreatefrompng($current_picture); //on ouvre l'image de fond
+            $dessus = imagecreatefrompng($image_incrustee); //on ouvre l'image a incruster
+            $infosize_dessous = getimagesize($filename); // on recupere la taille de l'image de fond dans un array
+            $infosize_dessus = getimagesize($image_incrustee);
+            $width_dessous = $infosize_dessous[0];
+            $height_dessous = $infosize_dessous[1];
+            $width_dessus = $infosize_dessus[0];
+            $height_dessus = $infosize_dessus[1];
+            $dst_x = 0;
+            $dst_y = 0;
+            $src_x = 0;
+            $src_y = 0;
+            $src_w = $width_dessus;
+            $src_h = $height_dessus;
+            $dst_w = $width_dessous;
+            $dst_h = $height_dessous;
+            $result = imagecopyresampled ($dessous, $dessus, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h );
+            imagepng($dessous, $filename); // on ecrit l'image traitee vers le fichier $filename
+        }
 
-    echo'<img src="'.("http://localhost:8081/view/images/$username $timestamp").'" height="300" width="400" class="img-thumnail" />';
+
+
+
+
+
+
+
+
+
+
+
 
 
     include("./view/footer.php");
 }
+
 
 ?>

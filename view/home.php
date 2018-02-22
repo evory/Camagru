@@ -13,16 +13,15 @@
 			</div>
 			<div class="content">
 				<div class="content_camera">
-					<video autoplay id="webcam" width="400" height="300"></video>
-					<canvas id="snapshot" width="400" height="300"></canvas>
+					<video autoplay id="webcam" width="800" height="600"></video>
+					<canvas class="content_canvas" id="snapshot" width="800" height="600"></canvas>
 				</div>
 				<div class="content_upload">
 				</div>
-					<input class="content_capture_btn" id="snapButton" type="button" value="Snap"/>
-					<a href="home/upload_pic">upload file</a>
 					<form class="content_modify_picture_btn" name="sendPicData" action="home/modify_picture" method="post">
+						<input class="content_capture_btn" id="snapButton" type="button" value="Snap"/>
 						<input type="hidden" name="modify_hidden" value="data">
-						<a href="#" onclick="photo();">Click to submit</a>
+						<a href="home/upload_pic">upload file</a>
 					</form>
 			</div>
 		</div>
@@ -50,9 +49,8 @@
 					// error.code
 				});
 				buttonsnap.addEventListener('click', function(){
-					context.drawImage(video, 0, 0, 400, 300);
+					context.drawImage(video, 0, 0, 800, 600);
 					data = canvas.toDataURL('image/png');
-					console.log(data);
 					document.sendPicData.modify_hidden.value = data;
 					document.forms["sendPicData"].submit();
 				})

@@ -1,9 +1,9 @@
 /*--------------------BASE--------------------*/
 
 body {
-  width: 100%;
-  margin: 0 auto;
-	background-color: #7986CB;
+    width: 100%;
+    margin: 0 auto;
+    background-color: #7986CB;
 }
 
 a {
@@ -18,35 +18,36 @@ h1 {
 form {
     margin-left: 15px;
 }
+
 /*-------------------LAYOUT-------------------*/
 /*----------Header----------*/
 
 .header {
-	width: 50%;
-  min-width: 1000px;
-  max-width: 1000px;
-  height: 50px;
-  margin: 0 auto;
+    width: 50%;
+    min-width: 1000px;
+    max-width: 1000px;
+    height: 50px;
+    margin: 0 auto;
 }
 
 .header_background {
-  position: absolute;
-  width: 100%;
-  height: 50px;
-  background-color: black;
-  opacity: 0.3;
-  z-index: -1;
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    background-color: black;
+    opacity: 0.3;
+    z-index: -1;
 }
 
 .header h1 {
-  line-height: 50px;
-  text-align: center;
-  margin-top: 0;
+    line-height: 50px;
+    text-align: center;
+    margin-top: 0;
 }
 
 .header_accueil {
 	width: 20%;
-  height: 50px;
+    height: 50px;
 	float: left;
 }
 
@@ -57,19 +58,19 @@ form {
 .header_menu li{
 	list-style-type: none;
 	margin-left: 5%;
-  height: 50px;
-  line-height: 50px;
+    height: 50px;
+    line-height: 50px;
 }
 
 .header_menu_btn {
 	font-size: 30px;
-  display: inline;
+    display: inline;
 }
 
 /*-----------Sidebar-----------*/
 
 .sidebar {
-  float: left;
+    float: left;
 	width: 200px;
 	height: 900px;
     margin-top: 20px;
@@ -132,6 +133,20 @@ form {
     color: black;
 }
 
+.content_canvas {
+    position: absolute;
+}
+
+.stickers_div {
+    width: 517px;
+    height: 100px;
+    border: 1px black solid;
+}
+
+.stickers_img {
+    width: 100px;
+    height: 100px;
+}
 /*----------Footer----------*/
 
 .footer {
