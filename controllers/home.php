@@ -4,7 +4,7 @@ require_once('./models/user_infos.php');
 require_once('./models/Database.class.php');
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 
-/*--------------------------------UPLOAD-PICS---------------------------------*/
+/*------------------------------SIDE-BAR-CANVAS-------------------------------*/
 $username_log = $_SESSION['login'];
 $recent_pics = Database::getInstance()->request("SELECT pics
                                                          FROM pictures
@@ -13,25 +13,23 @@ $recent_pics = Database::getInstance()->request("SELECT pics
 
 for ($i=0; $recent_pics[$i] ; $i++) {
     $last_pic = $recent_pics[$i]['pics'];
-    $canvas .= '<img class="sidebar_img" src ="http://localhost:8081/view/images/'.$last_pic.'" width="100px" height="80px">';
+    $canvas .= '<img class="sidebar_img" src ="http://localhost:8083/view/images/'.$last_pic.'" width="100px" height="80px">';
 }
-
-
 
 /*--------------------------------UPLOAD-PICS---------------------------------*/
 
 if ($action == "upload_pic") {
     include("./view/header.php");
     if (isset($_POST['upload_pic'])) {
-        if (!isset($_SESSION['login'])) {
-            $message = "Plase login if you want to upload pictures";
-            include("./view/home.php");
-            include("./view/footer.php");
-            exit();
-        }
+        // if (!isset($_SESSION['login'])) {
+        //     $message = "Please login if you want to upload pictures";
+        //     include("./view/home.php");
+        //     include("./view/footer.php");
+        //     exit();
+        // }
         $target = "view/images/".basename($_FILES['image']['name']);
 
-/*--------------check-if-image---------------*/
+/*------------check-if-image-------------*/
 
         function isimage(){
             $type = $_FILES['image']['type'];
@@ -55,7 +53,7 @@ if ($action == "upload_pic") {
             include("./view/footer.php");
             exit();
         }
-/*------------move-image-to-dir------------*/
+/*----------move-image-to-dir----------*/
         if (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
             $message = "Image uploaded";
             Database::getInstance()->request("INSERT INTO pictures (username, pics, description, date_time)
@@ -65,11 +63,11 @@ if ($action == "upload_pic") {
             $message = "Problem uploading image";
         }
         echo "<div id='img_div'>";
-            echo "<img src ='http://localhost:8081/view/images/".$image."'>";
-            echo "<a href='http://localhost:8081/home/modify_picture/$token_modify'>retoucher la photo</a>";
+            echo "<img src ='http://localhost:8083/view/images/".$image."'>";
+            echo "<a href='http://localhost:8083/home/modify_picture/$token_modify'>retoucher la photo</a>";
         echo "</div>";
     } else {
-        $message = "not an image";
+        $message = "file is not an image";
         include("./view/upload_pic.php");
         include("./view/footer.php");
         exit();
@@ -97,7 +95,7 @@ if ($action == "gallery") {
         $pic_time = $allPictures[$i]['date_time'];
         echo "posted by <strong>$pic_username</strong> the $pic_time <br>";
         echo '
-               <img src="'.("http://localhost:8081/view/images/$pic_name").'" height="300" width="400" class="img-thumnail" />
+               <img src="'.("http://localhost:8083/view/images/$pic_name").'" height="300" width="400" class="img-thumnail" />
                <br>';
 /*-------display-comments-----------*/
         $current_pic_comment = Database::getInstance()->request("SELECT comment
@@ -126,7 +124,7 @@ if ($action == "gallery") {
                                                              false, true);
     $total_likes_pic = count($total_likes_pic);
     if ($pic_username == $_SESSION['login']) {
-        echo "<a href='http://localhost:8081/home/delete_pic?pic_id=$pic_id'>supprimer</a>";
+        echo "<a href='http://localhost:8083/home/delete_pic?pic_id=$pic_id'>supprimer</a>";
     }
             echo '
                   <form class="" method="post">
@@ -134,13 +132,17 @@ if ($action == "gallery") {
                       <input type="hidden" name="pic_id" value='."$pic_id".'>
                       <input type="submit" name="sendComment" value="post">
                   </form>
-                  <a href="gallery?type=like&id_pic=' . $pic_id . '"><img src="http://localhost:8081/view/ressources/thumb_like.png" width="23"></a> (' . $total_likes_pic . ')
+                  <a href="gallery?type=like&id_pic=' . $pic_id . '"><img src="http://localhost:8083/view/ressources/thumb_like.png" width="23"></a> (' . $total_likes_pic . ')
                   <br>
                   <br>
                   <br>';
     }
 /*-----------save-comment-----------*/
     if (isset($_POST['sendComment']) && !empty($_POST['commentPost'])) {
+        if (emtpy($_SESSION['login'])) {
+            $message = "Please log in to commentss";
+            exit();
+        }
         $commentPost = $_POST['commentPost'];
         $current_pic_id = $_POST['pic_id'];
         $username = $_SESSION['login'];
@@ -155,7 +157,12 @@ if ($action == "gallery") {
             exit();
         }
         $id_pic = $_GET['id_pic'];
+
         if ($_GET['type'] == "like") {
+            if (empty($_SESSION['login'])) {
+                $message = "<h3>Please log in to like photo</h3>";
+
+            }
             $check_like = Database::getInstance()->request("SELECT id_like
                                                                      FROM likes
                                                                      WHERE id_pic = '$id_pic' AND username = '$username';",
@@ -220,7 +227,7 @@ if($action == "your_pictures") {
         $pic_time = $user_pictures[$i]['date_time'];
         echo "posted by <strong>$pic_username</strong> the $pic_time <br>";
         echo '
-               <img src="'.("http://localhost:8081/view/images/$pic_name").'" height="300" width="400" class="img-thumnail" />
+               <img src="'.("http://localhost:8083/view/images/$pic_name").'" height="300" width="400" class="img-thumnail" />
                <br>';
 /*-------display-comments-----------*/
         $current_pic_comment = Database::getInstance()->request("SELECT comment
@@ -249,7 +256,7 @@ if($action == "your_pictures") {
                                                              false, true);
     $total_likes_pic = count($total_likes_pic);
     if ($pic_username == $_SESSION['login']) {
-        echo "<a href='http://localhost:8081/home/delete_pic?pic_id=$pic_id'>supprimer</a>";
+        echo "<a href='http://localhost:8083/home/delete_pic?pic_id=$pic_id'>supprimer</a>";
     }
             echo '
                   <form class="" method="post">
@@ -257,7 +264,7 @@ if($action == "your_pictures") {
                       <input type="hidden" name="pic_id" value='."$pic_id".'>
                       <input type="submit" name="sendComment" value="post">
                   </form>
-                  <a href="your_pictures?type=like&id_pic=' . $pic_id . '"><img src="http://localhost:8081/view/ressources/thumb_like.png" width="23"></a> (' . $total_likes_pic . ')
+                  <a href="your_pictures?type=like&id_pic=' . $pic_id . '"><img src="http://localhost:8083/view/ressources/thumb_like.png" width="23"></a> (' . $total_likes_pic . ')
                   <br>
                   <br>
                   <br>';
@@ -319,26 +326,26 @@ if ($action == "modify_picture") {
     $pic_data_64 = str_replace('data:image/png;base64,', '', $pic_data_64);
     $decoded_pic = base64_decode($pic_data_64);
     $timestamp = time();
-    $current_picture = "'.$username.'_'.$timestamp.'.png'";
-    echo $current_picture;
+    $current_picture = ''.$username.'_'.$timestamp.'.png';
+    var_dump($current_picture);
     if (!empty($decoded_pic)) {
         file_put_contents('view/images/'.$username.'_'.$timestamp.'.png', $decoded_pic);
     }
     echo'
-        <img src="http://localhost:8081/view/images/' . $username . '_' . $timestamp . '.png" height="600" width="800" class="img-thumnail" />
+        <img src="http://localhost:8083/view/images/' . $username . '_' . $timestamp . '.png" height="600" width="800" class="img-thumnail" />
         <br>
         <div class="stickers_div">
-        <a href="modify_picture?sticker=beer.png&img_name='.$username.'_'.$timestamp.'.png"><img class="stickers_img" src="http://localhost:8081/view/stickers/beer.png"></a>
-        <a href="modify_picture?sticker=jo.png"><img class="stickers_img" src="http://localhost:8081/view/stickers/jo.png"></a>
-        <a href="modify_picture?sticker=grass.png"><img class="stickers_img" src="http://localhost:8081/view/stickers/grass.png"></a>
-        <a href="modify_picture?sticker=fire.png"><img class="stickers_img" src="http://localhost:8081/view/stickers/fire.png"></a>
-        <a href="modify_picture?sticker=lizard.png"><img class="stickers_img" src="http://localhost:8081/view/stickers/lizard.png"></a>
+        <a href="modify_picture?sticker=beer.png&img_name='.$username.'_'.$timestamp.'.png"><img class="stickers_img" src="http://localhost:8083/view/stickers/beer.png"></a>
+        <a href="modify_picture?sticker=jo.png"><img class="stickers_img" src="http://localhost:8083/view/stickers/jo.png"></a>
+        <a href="modify_picture?sticker=grass.png"><img class="stickers_img" src="http://localhost:8083/view/stickers/grass.png"></a>
+        <a href="modify_picture?sticker=fire.png"><img class="stickers_img" src="http://localhost:8083/view/stickers/fire.png"></a>
+        <a href="modify_picture?sticker=lizard.png"><img class="stickers_img" src="http://localhost:8083/view/stickers/lizard.png"></a>
         </div>
         <form method="post" action="index.php">
             <input type="hidden" name="publishPicture" value="'.$finalPics.'">
             <input type="submit" name="sendComment" value="publish">
         </form>
-        <a class="delete_btn" href="http://localhost:8081?delete_pic=' . $username . '_' . $timestamp . '.png">delete</a>
+        <a class="delete_btn" href="http://localhost:8083?delete_pic=' . $username . '_' . $timestamp . '.png">delete</a>
         <br>
         ';
         if (isset($_GET['sticker'])) {
@@ -364,21 +371,7 @@ if ($action == "modify_picture") {
             imagepng($dessous, $filename); // on ecrit l'image traitee vers le fichier $filename
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     include("./view/footer.php");
 }
-
 
 ?>
