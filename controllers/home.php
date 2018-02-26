@@ -21,12 +21,12 @@ for ($i=0; $recent_pics[$i] ; $i++) {
 if ($action == "upload_pic") {
     include("./view/header.php");
     if (isset($_POST['upload_pic'])) {
-        // if (!isset($_SESSION['login'])) {
-        //     $message = "Please login if you want to upload pictures";
-        //     include("./view/home.php");
-        //     include("./view/footer.php");
-        //     exit();
-        // }
+        if (!isset($_SESSION['login'])) {
+            $message = "Please login if you want to upload pictures";
+            include("./view/home.php");
+            include("./view/footer.php");
+            exit();
+        }
         $target = "view/images/".basename($_FILES['image']['name']);
 
 /*------------check-if-image-------------*/
@@ -80,7 +80,7 @@ if ($action == "upload_pic") {
 
 }
 
-/*------------------------------display pictures------------------------------*/
+/*------------------------------DISPLAY-PICTURES------------------------------*/
 if ($action == "gallery") {
     include("./view/header.php");
     include("./view/gallery.php");
@@ -128,7 +128,7 @@ if ($action == "gallery") {
     }
             echo '
                   <form class="" method="post">
-                      <textarea name="commentPost" rows="4" cols="40" placeholder="Comment"></textarea>
+                      <textarea name="commentPost" rows="3" cols="40" placeholder="Comment"></textarea>
                       <input type="hidden" name="pic_id" value='."$pic_id".'>
                       <input type="submit" name="sendComment" value="post">
                   </form>
@@ -140,7 +140,7 @@ if ($action == "gallery") {
 /*-----------save-comment-----------*/
     if (isset($_POST['sendComment']) && !empty($_POST['commentPost'])) {
         if (emtpy($_SESSION['login'])) {
-            $message = "Please log in to commentss";
+            $message = "Please log in to comments";
             exit();
         }
         $commentPost = $_POST['commentPost'];
@@ -260,7 +260,7 @@ if($action == "your_pictures") {
     }
             echo '
                   <form class="" method="post">
-                      <textarea name="commentPost" rows="4" cols="40" placeholder="Comment"></textarea>
+                      <textarea name="commentPost" rows="3" cols="40" placeholder="Comment"></textarea>
                       <input type="hidden" name="pic_id" value='."$pic_id".'>
                       <input type="submit" name="sendComment" value="post">
                   </form>
@@ -304,43 +304,34 @@ if($action == "your_pictures") {
 }
 
 /*------------------------------DELETE-MODIFYING-PICTURE----------------------*/
-if (empty($controllers) && empty($action)) {
-    if ($_GET['delete_pic']) {
-        $delete_pic = $_GET['delete_pic'];
-        if (@unlink(''.$root.'/view/images/'.$delete_pic.'')) { // PROBLEME SECU - TOUT LE MONDE PEU DELETE EN CHANGEANT L'URL
-            $message = "picture deleted";
-        } else {
-            $message = "can't find your picture";
-        }
-    }
-}
+// if (empty($controllers) && empty($action)) {
+//     if ($_GET['delete_pic']) {
+//         $delete_pic = $_GET['delete_pic'];
+//         if (@unlink(''.$root.'/view/images/'.$delete_pic.'')) { PROBLEME SECU - TOUT LE MONDE PEU DELETE EN CHANGEANT L'URL
+//             $message = "picture deleted";
+//         } else {
+//             $message = "can't find your picture";
+//         }
+//     }
+// }
 
 
 /*------------------------------MODIFY-PICTURE------------------------------*/
 
 if ($action == "modify_picture") {
     include("./view/header.php");
-    include("./view/modify_picture.php");
     $pic_data_64 = $_POST['modify_hidden'];
     $pic_data_64 = str_replace(' ', '+', $pic_data_64);
     $pic_data_64 = str_replace('data:image/png;base64,', '', $pic_data_64);
     $decoded_pic = base64_decode($pic_data_64);
-    $timestamp = time();
-    $current_picture = ''.$username.'_'.$timestamp.'.png';
-    var_dump($current_picture);
+    $timestamp = mktime();
+    $current_picture = 'view/images/'.$username.'_'.$timestamp.'.png';
     if (!empty($decoded_pic)) {
-        file_put_contents('view/images/'.$username.'_'.$timestamp.'.png', $decoded_pic);
+        file_put_contents($current_picture, $decoded_pic);
     }
     echo'
         <img src="http://localhost:8083/view/images/' . $username . '_' . $timestamp . '.png" height="600" width="800" class="img-thumnail" />
         <br>
-        <div class="stickers_div">
-        <a href="modify_picture?sticker=beer.png&img_name='.$username.'_'.$timestamp.'.png"><img class="stickers_img" src="http://localhost:8083/view/stickers/beer.png"></a>
-        <a href="modify_picture?sticker=jo.png"><img class="stickers_img" src="http://localhost:8083/view/stickers/jo.png"></a>
-        <a href="modify_picture?sticker=grass.png"><img class="stickers_img" src="http://localhost:8083/view/stickers/grass.png"></a>
-        <a href="modify_picture?sticker=fire.png"><img class="stickers_img" src="http://localhost:8083/view/stickers/fire.png"></a>
-        <a href="modify_picture?sticker=lizard.png"><img class="stickers_img" src="http://localhost:8083/view/stickers/lizard.png"></a>
-        </div>
         <form method="post" action="index.php">
             <input type="hidden" name="publishPicture" value="'.$finalPics.'">
             <input type="submit" name="sendComment" value="publish">
@@ -350,27 +341,18 @@ if ($action == "modify_picture") {
         ';
         if (isset($_GET['sticker'])) {
             $sticker = $_GET['sticker'];
-            print_r($sticker);
-            $dessous = imagecreatefrompng($current_picture); //on ouvre l'image de fond
-            $dessus = imagecreatefrompng($image_incrustee); //on ouvre l'image a incruster
-            $infosize_dessous = getimagesize($filename); // on recupere la taille de l'image de fond dans un array
-            $infosize_dessus = getimagesize($image_incrustee);
-            $width_dessous = $infosize_dessous[0];
-            $height_dessous = $infosize_dessous[1];
-            $width_dessus = $infosize_dessus[0];
-            $height_dessus = $infosize_dessus[1];
-            $dst_x = 0;
-            $dst_y = 0;
-            $src_x = 0;
-            $src_y = 0;
-            $src_w = $width_dessus;
-            $src_h = $height_dessus;
-            $dst_w = $width_dessous;
-            $dst_h = $height_dessous;
-            $result = imagecopyresampled ($dessous, $dessus, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h );
-            imagepng($dessous, $filename); // on ecrit l'image traitee vers le fichier $filename
+            $dessous = imagecreatefrompng($current_picture_path); //on ouvre l'image de fond
+            $dessus = imagecreatefrompng($sticker_path); //on ouvre l'image a incruster
+            $infosize_dessous = getimagesize($current_picture_path); // on recupere la taille de l'image de fond dans un array
+            $infosize_dessus = getimagesize($sticker_path);
+            $src_w = $infosize_dessus[0];
+            $src_h = $infosize_dessus[1];
+            $dst_w = $infosize_dessous[0];
+            $dst_h = $infosize_dessous[1];
+            $result = imagecopyresampled ($dessous, $dessus, 0, 0, 0, 0, $dst_w, $dst_h, $src_w, $src_h);
+            imagepng($dessous, $current_picture); // on ecrit l'image traitee vers le fichier $filename
         }
-
+    include("./view/modify_picture.php");
     include("./view/footer.php");
 }
 

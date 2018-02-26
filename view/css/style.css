@@ -146,6 +146,8 @@ form {
 .stickers_img {
     width: 100px;
     height: 100px;
+    float: left;
+    display: block;
 }
 /*----------Footer----------*/
 
