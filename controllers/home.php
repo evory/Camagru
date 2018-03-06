@@ -16,6 +16,7 @@ for ($i=0; $recent_pics[$i] ; $i++) {
     $canvas .= '<img class="sidebar_img" src ="http://localhost:8083/view/images/'.$last_pic.'" width="100px" height="80px">';
 }
 
+
 /*--------------------------------UPLOAD-PICS---------------------------------*/
 
 if ($action == "upload_pic") {
