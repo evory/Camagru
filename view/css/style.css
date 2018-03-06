@@ -138,9 +138,10 @@ form {
 }
 
 .stickers_div {
-    width: 517px;
+    /* width: 517px; */
     height: 100px;
     border: 1px black solid;
+    display: inline-block;
 }
 
 .stickers_img {
@@ -149,6 +150,7 @@ form {
     float: left;
     display: block;
 }
+
 /*----------Footer----------*/
 
 .footer {
@@ -171,4 +173,13 @@ form {
 .form_btn {
     width: 50px;
 }
+
+.delete_com_style {
+    text-decoration: underline;
+}
+
+
+
+
+
 /*--------------------STATE---------------------*/

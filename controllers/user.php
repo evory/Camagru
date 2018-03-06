@@ -348,3 +348,8 @@ if ($action == "new_password") {
     include("./view/new_password.php");
     include("./view/footer.php");
 }
+
+if (empty($action) && (!(empty($controller)))) {
+    $_SESSION['$timestamp'] = "";  
+    header("Location: http://localhost:8080");
+}
