@@ -49,7 +49,7 @@ if ($action == "login") {
             }
             // else if (!empty($check_conf_token['confirm_token'])) {
             //     include("./view/header.php");
-            //     $message = "Please verify your email";               A DECOMMENTER
+            //     $message = "Please verify your email";      verif email         A DECOMMENTER
             //     include("./view/login.php");
             //     include("./view/footer.php");
             //     exit();
@@ -230,7 +230,7 @@ if ($action == "account") {
                                           false, false);
     }
 
-/*----------Password-----------*/
+/*--------change-Password--------*/
     if ($_POST['changePassword'] == "ok") {
         if (($_POST['new_password'] !== $_POST['confirm_new_password'])) {
             include("./view/header.php");
@@ -269,6 +269,22 @@ if ($action == "account") {
     include("./view/account.php");
     include("./view/footer.php");
 }
+
+/*-----comment-email-option-------*/
+    if ($_POST['emailNotif'] == ok) {
+        if ($_POST['yes'] == 1) {
+            Database::getInstance()->request("UPDATE `user`
+                                              SET `commentemail` = 1
+                                              WHERE `user`.`id` = '$user_id';",
+                                              false, false);
+        }
+        if ($_POST['no'] == 1) {
+            Database::getInstance()->request("UPDATE `user`
+                                              SET `commentemail` = 0
+                                              WHERE `user`.`id` = '$user_id';",
+                                              false, false);
+        }
+    }
 
 /*-------------------------------FORGOT-PASSWORD------------------------------*/
 if ($action == "forgot_password") {
@@ -350,6 +366,6 @@ if ($action == "new_password") {
 }
 
 if (empty($action) && (!(empty($controller)))) {
-    $_SESSION['$timestamp'] = "";  
+    $_SESSION['$timestamp'] = "";
     header("Location: http://localhost:8080");
 }

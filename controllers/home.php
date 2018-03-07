@@ -2,18 +2,31 @@
 
 require_once('./models/user_infos.php');
 require_once('./models/Database.class.php');
+require_once('./models/Mail.class.php');
+
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 
 /*------------------------------SIDE-BAR-CANVAS-------------------------------*/
 $username_log = $_SESSION['login'];
+
+
 $recent_pics = Database::getInstance()->request("SELECT pics
                                                          FROM pictures
                                                          WHERE username = '$username_log';",
                                                          false, true);
 
-for ($i=0; $recent_pics[$i] ; $i++) {
-    $last_pic = $recent_pics[$i]['pics'];
-    $canvas .= '<img class="sidebar_img" src ="http://localhost:8080/view/images/'.$last_pic.'" width="100px" height="80px">';
+$recent_pics_count = count($recent_pics);
+if ($recent_pics_count < 5){
+
+    for ($i=0; $recent_pics[$i]; $i++) {
+        $last_pic = $recent_pics[$i]['pics'];
+        $canvas .= '<img class="sidebar_img" src ="http://localhost:8080/view/images/'.$last_pic.'" width="100px" height="80px">';
+    }
+} else {
+    for ($i=0; $i < 5; $i++) {
+        $last_pic = $recent_pics[$i]['pics'];
+        $canvas .= '<img class="sidebar_img" src ="http://localhost:8080/view/images/'.$last_pic.'" width="100px" height="80px">';
+    }
 }
 
 /*--------------------------------UPLOAD-PICS---------------------------------*/
@@ -104,7 +117,7 @@ if ($action == "gallery") {
                                                                   FROM comments
                                                                   WHERE id_pic = $pic_id;",
                                                                   false, true);
-            $id_comment =  $all_com_from_pic[$j]['id_comment'];            
+            $id_comment =  $all_com_from_pic[$j]['id_comment'];
             $username_comment = Database::getInstance()->request("SELECT username
                                                                   FROM comments
                                                                   WHERE id_pic = $pic_id;",
@@ -115,7 +128,10 @@ if ($action == "gallery") {
             if (is_array($username_comment)) {
                 $username_comment = current($username_comment[$j]);
             }
-            echo ''.$username_comment.' : '.$lastcomment.' <a class="delete_com_style" href="http://localhost:8080/home/delete_com?com_id='.$id_comment.'">delete</a>';
+            echo ''.$username_comment.' : '.$lastcomment. '';
+            if ($_SESSION['login'] == $username_comment) {
+                echo ' <a class="delete_com_style" href="http://localhost:8080/home/delete_com?com_id='.$id_comment.'">delete</a>';;
+            }
             echo "<br>";
         }
 /*-----------comment-box------------*/
@@ -139,7 +155,7 @@ if ($action == "gallery") {
                   <br>';
     }
 /*-----------save-comment-----------*/
-    if (isset($_POST['sendComment']) && !empty($_POST['commentPost'])) {  
+    if (isset($_POST['sendComment']) && !empty($_POST['commentPost'])) {
         if (empty($_SESSION['login'])) {
             $message = "<h2>Please log in to comments</h2>";
             exit();
@@ -151,7 +167,32 @@ if ($action == "gallery") {
         Database::getInstance()->request("INSERT INTO comments (id_comment, id_pic, username, comment, date_time)
                                           VALUES (NULL, '$current_pic_id', '$username', '$commentPost', '$date_time');",
                                           false, false);
+/*-----------send-notif-----------*/
+
+        $username_pic_owner = Database::getInstance()->request("SELECT username
+                                                             FROM pictures
+                                                             WHERE id_pic = '$current_pic_id';",
+                                                             false, false);
+        $username_pic_owner = current($username_pic_owner);
+
+        $check_if_notif_allowed = Database::getInstance()->request("SELECT commentemail
+                                                             FROM user
+                                                             WHERE username = '$username_pic_owner';",
+                                                             false, false);
+        $check_if_notif_allowed = current($check_if_notif_allowed);
+
+
+        $send_notif = new Email();
+        $email_pic_owner = Database::getInstance()->request("SELECT email
+                                                             FROM user
+                                                             WHERE username = '$username_pic_owner';",
+                                                             false, true);
+        if ($check_if_notif_allowed == 1) {
+            $send_notif->newCommentEmail($email_pic_owner, $username_comment);
+        }
     }
+
+/*-----------protection-----------*/
     if (isset($_GET['type'], $_GET['id_pic'])) {
         if (!is_numeric($_GET['id_pic'])) {
             $message = "wrong URL";
@@ -213,11 +254,11 @@ if ($action == "delete_pic") {
 /*----------delete-comments---------*/
 
 if ($action == "delete_com") {
-    echo "coucou";
     $com_id = $_GET['com_id'];
     Database::getInstance()->request("DELETE FROM `comments`
-                                      WHERE id_comment = '$com_id';", 
+                                      WHERE id_comment = '$com_id';",
                                       false, false);
+    header("Location: http://localhost:8080");
 }
 
 /*-----------------------------your-pictures----------------------------------*/
@@ -250,7 +291,7 @@ if($action == "your_pictures") {
                                                         FROM comments
                                                         WHERE id_pic = $pic_id;",
                                                         false, true);
-            $id_comment =  $all_com_from_pic[$j]['id_comment'];  
+            $id_comment =  $all_com_from_pic[$j]['id_comment'];
             $username_comment = Database::getInstance()->request("SELECT username
                                                                   FROM comments
                                                                   WHERE id_pic = $pic_id;",
@@ -261,7 +302,10 @@ if($action == "your_pictures") {
             if (is_array($username_comment)) {
                 $username_comment = current($username_comment[$j]);
             }
-            echo ''.$username_comment.' : '.$lastcomment.' <a class="delete_com_style" href="http://localhost:8080/home/delete_com?com_id='.$id_comment.'">delete</a>';
+            echo ''.$username_comment.' : '.$lastcomment. '';
+            if ($_SESSION['login'] == $username_comment) {
+                echo ' <a class="delete_com_style" href="http://localhost:8080/home/delete_com?com_id='.$id_comment.'">delete</a>';;
+            }
             echo "<br>";
         }
 /*-----------comment-box------------*/
@@ -290,7 +334,7 @@ if($action == "your_pictures") {
             $message = "<h2>Please log in to comments</h2>";
             exit();
         }
-        $commentPost = $_POST['commentPost']; 
+        $commentPost = $_POST['commentPost'];
         $current_pic_id = $_POST['pic_id'];
         $username = $_SESSION['login'];
         $date_time = date("F j, Y, g:i a");
@@ -354,14 +398,13 @@ if ($action == "modify_picture") {
             $sticker = "beer.png";
         }
         if ($_POST['overlay'] == "2") {
-            $sticker = "jo.png";            
+            $sticker = "jo.png";
         }
         if ($_POST['overlay'] == "3") {
-            $sticker = "grass.png";            
+            $sticker = "grass.png";
         }
         $current_picture_name = substr($current_picture, 12);
         if ($_POST['sendsticker'] == "Envoyer") {
-            $date_time = date("F j, Y, g:i a");
             $sticker_path = "http://localhost:8080/view/stickers/$sticker";
             $current_picture_path = "http://localhost:8080/$current_picture";
             $dessous = imagecreatefrompng($current_picture_path); //on ouvre l'image de fond
@@ -381,10 +424,16 @@ if ($action == "modify_picture") {
             if ($sticker == "jo.png") {
                 $result = imagecopyresampled ($dessous, $dessus, 0, 0, 0, 0, $dst_w, $dst_h, $src_w, $src_h);
             }
-            $testest = imagepng($dessous, $current_picture); // on ecrit l'image traitee vers le fichier $filename            
-
-            }
+            $testest = imagepng($dessous, $current_picture); // on ecrit l'image traitee vers le fichier $filename
+        }
             if ($_POST['publishPhoto'] == "publish") {
+                if (empty($_SESSION['login'])) {
+                    $message = "please log in to publish pictures";
+                    header("Location: http://localhost:8080");
+                    exit();
+
+                }
+            $date_time = date("F j, Y, g:i a");
             Database::getInstance()->request("INSERT INTO pictures (username, pics, description, date_time)
                                               VALUES ('$username', '$current_picture_name', '$description', '$date_time');",
                                               false, false);
@@ -396,7 +445,7 @@ if ($action == "modify_picture") {
 }
 
 if (empty($action) && (!(empty($controller)))) {
-    $_SESSION['$timestamp'] = "";  
+    $_SESSION['$timestamp'] = "";
     header("Location: http://localhost:8080");
 }
 

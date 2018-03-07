@@ -47,4 +47,11 @@ class Email {
             return ($message);
         }
     }
+
+    public function newCommentEmail($to, $from) {
+        $headers  = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+        $newCommentNotif = "$from commented your picture";
+        mail($to, 'New comment', $newCommentNotif, $headers);
+    }
 }

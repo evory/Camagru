@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS `user` (
     `username` VARCHAR(255) NOT NULL,
     `email` VARCHAR(255) NOT NULL,
     `hash` VARCHAR(255) NOT NULL,
+    `commentemail` INT NULL DEFAULT '1',
     `htoken` VARCHAR(255) NULL,
     `confirm_token` VARCHAR(255) NULL,
     PRIMARY KEY (`id`))
