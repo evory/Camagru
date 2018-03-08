@@ -132,10 +132,12 @@ if ($action == "signin") {
         $confirm_token = hash("md5", time());
         $send_email = new Email();
         $send_email->welcomeEmail($_POST['email'], $confirm_token, $username);
-
+        
+        $field = ['email' => $email, 'username' =>$username, 'hash' => $hash, 'confirm_token' => $confirm_token];
+        
         Database::getInstance()->request("INSERT INTO `user` (`id`, `email`, `username`, `hash`, `htoken`, `confirm_token`)
-        VALUES (NULL, '$email', '$username', '$hash', NULL, '$confirm_token');",
-        false, false);
+        VALUES (NULL, :email, :username, :hashh, NULL, :confirm_token);",
+        $field, false);
 
         $message = "An email as been send to your your email address, please confirm yor address to cotinue";
     }
@@ -187,10 +189,11 @@ if ($action == "account") {
         }
         $old_username = $_SESSION['login'];
         $new_username = $_POST['new_username'];
+        $field = ['new_username' => $new_username];
         Database::getInstance()->request("UPDATE `user`
-                                          SET `username` = '$new_username'
+                                          SET `username` = :new_username
                                           WHERE `user`.`id` = '$user_id';",
-                                          false, false);
+                                          $field, false);
 /*----change-username-in-all-db----*/
         Database::getInstance()->request("UPDATE `pictures`
                                           SET `username` = '$new_username'
@@ -224,10 +227,11 @@ if ($action == "account") {
             exit();
         }
         $new_email = $_POST['new_email'];
+        $field = ['new_email' => $new_email];
         Database::getInstance()->request("UPDATE `user`
-                                          SET `email` = '$new_email'
+                                          SET `email` = :new_email
                                           WHERE `user`.`id` = '$user_id';",
-                                          false, false);
+                                          $field, false);
     }
 
 /*--------change-Password--------*/
@@ -365,7 +369,7 @@ if ($action == "new_password") {
     include("./view/footer.php");
 }
 
-if (empty($action) && (!(empty($controller)))) {
+if (empty($action)) {
     $_SESSION['$timestamp'] = "";
     header("Location: http://localhost:8080");
 }

@@ -6,9 +6,6 @@
         <input type="file" name="image">
     </div>
     <div>
-        <textarea name="description" rows="4" cols="40" placeholder="Say something about your pics"></textarea>
-    </div>
-    <div>
         <input type="submit" name="upload_pic" value="Upload Image">
     </div>
 </form>

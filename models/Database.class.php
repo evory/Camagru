@@ -25,10 +25,10 @@ class Database
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_EMULATE_PREPARES => falses
             ];
-            $this->PDOInstance = new PDO('mysql:host=' .DB_HOST. ';dbname=' .DB_DATABASE, DB_USER, DB_PASSWORD, $options);
+            $this->_PDOInstance = new PDO('mysql:host=' .DB_HOST. ';dbname=' .DB_DATABASE, DB_USER, DB_PASSWORD, $options);
         } catch (PDOException $e) {
             try {
-                $this->PDOInstance = new PDO('mysql:host=localhost', "root", "br200991");
+                $this->_PDOInstance = new PDO('mysql:host=localhost', "root", "br200991");
             } catch (PDOException $e) {
                 $message = "Database unaviable, please try again later";
                 exit($e->getMessage());
@@ -57,9 +57,11 @@ class Database
     */
     public function request($sql, $fields = false, $multiple = false) {
         try {
-            $statement = $this->PDOInstance->prepare($sql);
+            $statement = $this->_PDOInstance->prepare($sql);
             if($fields) {
                 foreach ($fields as $key => $value) {
+                    var_dump($key);
+                    var_dump($value);
                     if(is_int($value)) {
                         $dataType = PDO::PARAM_INT;
                     } else if(is_bool($value)) {

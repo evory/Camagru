@@ -11,19 +11,20 @@ $username_log = $_SESSION['login'];
 
 
 $recent_pics = Database::getInstance()->request("SELECT pics
-                                                         FROM pictures
-                                                         WHERE username = '$username_log';",
-                                                         false, true);
+                                                 FROM pictures 
+                                                 WHERE username = '$username_log'
+                                                 ORDER BY id_pic DESC;",
+                                                 false, true);
 
 $recent_pics_count = count($recent_pics);
 if ($recent_pics_count < 5){
 
-    for ($i=0; $recent_pics[$i]; $i++) {
+    for ($i = 0; $recent_pics[$i]; $i++) {
         $last_pic = $recent_pics[$i]['pics'];
         $canvas .= '<img class="sidebar_img" src ="http://localhost:8080/view/images/'.$last_pic.'" width="100px" height="80px">';
     }
 } else {
-    for ($i=0; $i < 5; $i++) {
+    for ($i = 0; $i < 5; $i++) {
         $last_pic = $recent_pics[$i]['pics'];
         $canvas .= '<img class="sidebar_img" src ="http://localhost:8080/view/images/'.$last_pic.'" width="100px" height="80px">';
     }
@@ -56,7 +57,6 @@ if ($action == "upload_pic") {
     if (isimage()){
         $username_post = $_SESSION['login'];
         $image = $_FILES['image']['name'];
-        $description = $_POST['description' ];
         $date_time = date("F j, Y, g:i a");
         if (empty($image)) {
             include("./view/header.php");
@@ -68,8 +68,8 @@ if ($action == "upload_pic") {
 /*----------move-image-to-dir----------*/
         if (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
             $message = "Image uploaded";
-            Database::getInstance()->request("INSERT INTO pictures (username, pics, description, date_time)
-            VALUES ('$username_post', '$image', '$description', '$date_time');",
+            Database::getInstance()->request("INSERT INTO pictures (username, pics, date_time)
+            VALUES ('$username_post', '$image', '$date_time');",
             false, false);
         } else {
             $message = "Problem uploading image";
@@ -164,9 +164,10 @@ if ($action == "gallery") {
         $current_pic_id = $_POST['pic_id'];
         $username = $_SESSION['login'];
         $date_time = date("F j, Y, g:i a");
+        $field = ['commentPost' => $commentPost];
         Database::getInstance()->request("INSERT INTO comments (id_comment, id_pic, username, comment, date_time)
-                                          VALUES (NULL, '$current_pic_id', '$username', '$commentPost', '$date_time');",
-                                          false, false);
+                                          VALUES (NULL, '$current_pic_id', '$username', :commentPost, '$date_time');",
+                                          $field, false);
 /*-----------send-notif-----------*/
 
         $username_pic_owner = Database::getInstance()->request("SELECT username
@@ -252,7 +253,6 @@ if ($action == "delete_pic") {
 }
 
 /*----------delete-comments---------*/
-
 if ($action == "delete_com") {
     $com_id = $_GET['com_id'];
     Database::getInstance()->request("DELETE FROM `comments`
@@ -269,7 +269,8 @@ if($action == "your_pictures") {
     $username_log = $_SESSION['login'];
     $user_pictures = Database::getInstance()->request("SELECT *
                                                        FROM pictures
-                                                       WHERE username = '$username_log';",
+                                                       WHERE username = '$username_log'
+                                                       ORDER BY id_pic DESC;",
                                                        false, true);
     for ($i=0; $user_pictures[$i]; $i++) {
         $pic_id = $user_pictures[$i]['id_pic'];
@@ -280,6 +281,7 @@ if($action == "your_pictures") {
         echo '
                <img src="'.("http://localhost:8080/view/images/$pic_name").'" height="300" width="400" class="img-thumnail" />
                <br>';
+
 /*-------display-comments-----------*/
         $current_pic_comment = Database::getInstance()->request("SELECT comment
                                                                  FROM comments
@@ -315,7 +317,7 @@ if($action == "your_pictures") {
                                                              false, true);
     $total_likes_pic = count($total_likes_pic);
     if ($pic_username == $_SESSION['login']) {
-        echo "<a href='http://localhost:8080/home/delete_pic?pic_id=$pic_id'>supprimer</a>";
+        echo "<a href='http://localhost:8080/home/delete_pic?pic_id=$pic_id'>delete picture</a>";
     }
             echo '
                   <form class="" method="post">
@@ -338,9 +340,10 @@ if($action == "your_pictures") {
         $current_pic_id = $_POST['pic_id'];
         $username = $_SESSION['login'];
         $date_time = date("F j, Y, g:i a");
+        $field = ['commentPost' => $commentPost];
         Database::getInstance()->request("INSERT INTO comments (id_comment, id_pic, username, comment, date_time)
-                                          VALUES (NULL, '$current_pic_id', '$username', '$commentPost', '$date_time');",
-                                          false, false);
+                                          VALUES (NULL, '$current_pic_id', '$username', :commentPost, '$date_time');",
+                                          $field, false);
     }
     if (isset($_GET['type'], $_GET['id_pic'])) {
         if (!is_numeric($_GET['id_pic'])) {
@@ -416,7 +419,7 @@ if ($action == "modify_picture") {
             $dst_w = $infosize_dessous[0];
             $dst_h = $infosize_dessous[1];
             if ($sticker == "beer.png") {
-                $result = imagecopyresampled ($dessous, $dessus, 0, 0, 0, 0, $dst_w, $dst_h, $src_w / 3, $src_h / 3);
+                $result = imagecopyresampled ($dessous, $dessus, 0, 0, 0, 0, $dst_w, $dst_h, $src_w, $src_h);
             }
             if ($sticker == "grass.png") {
                 $result = imagecopyresampled ($dessous, $dessus, 0, 0, 0, 0, $dst_w, $dst_h, $src_w, $src_h);
@@ -434,8 +437,8 @@ if ($action == "modify_picture") {
 
                 }
             $date_time = date("F j, Y, g:i a");
-            Database::getInstance()->request("INSERT INTO pictures (username, pics, description, date_time)
-                                              VALUES ('$username', '$current_picture_name', '$description', '$date_time');",
+            Database::getInstance()->request("INSERT INTO pictures (username, pics,  date_time)
+                                              VALUES ('$username', '$current_picture_name', '$date_time');",
                                               false, false);
             $message = "Your picture has been uploaded";
             header("Location: http://localhost:8080");
@@ -444,9 +447,9 @@ if ($action == "modify_picture") {
     include("./view/footer.php");
 }
 
-if (empty($action) && (!(empty($controller)))) {
+if (empty($action)) {
     $_SESSION['$timestamp'] = "";
-    header("Location: http://localhost:8080");
+    // header("Location: http://localhost:8080");
 }
 
 ?>

@@ -23,7 +23,7 @@ $email_db = array_map('current', $email_db);
 
 /*--------------------------------------------------------*/
 
-$hash_db = Database::getInstance()->request('SELECT hash
+$hash_db = Database::getInstance()->request('SELECT hashh
                                              FROM user',
                                              false, true);
 $hash_db = array_map('current', $hash_db);
@@ -70,5 +70,6 @@ $confirm_token_db = array_map('current', $confirm_token_db);
 
 
 $allPictures = Database::getInstance()->request('SELECT *
-                                                 FROM pictures;',
+                                                 FROM pictures
+                                                 ORDER BY id_pic DESC;',
                                                  false, true);

@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `user` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `username` VARCHAR(255) NOT NULL,
     `email` VARCHAR(255) NOT NULL,
-    `hash` VARCHAR(255) NOT NULL,
+    `hashh` VARCHAR(255) NOT NULL,
     `commentemail` INT NULL DEFAULT '1',
     `htoken` VARCHAR(255) NULL,
     `confirm_token` VARCHAR(255) NULL,
@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS `pictures` (
     `id_pic` INT NOT NULL AUTO_INCREMENT ,
     `username` VARCHAR(255) NOT NULL ,
     `pics` TEXT NOT NULL ,
-    `description` VARCHAR(255) NULL ,
     `like` INT NULL ,
     `date_time` VARCHAR(255) NOT NULL ,
     PRIMARY KEY (`id_pic`))
