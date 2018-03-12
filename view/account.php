@@ -14,7 +14,7 @@
     </form>
     <form class="form" action="" method="post">
         <h2>change your email address</h2>
-        New Email : <input type="text" name="new_email"><br><br>
+        New Email : <input type="email" name="new_email"><br><br>
         <input type="submit" name="changeEmail" value="ok">
     </form>
     <form class="form" action="" method="post">

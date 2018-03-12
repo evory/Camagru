@@ -146,6 +146,7 @@ if ($action == "signin") {
         $email = $_POST['email'];
         $hashh = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $confirm_token = hash("md5", time());
+        $username = $_POST['username']; 
         $send_email = new Email();
         $send_email->welcomeEmail($_POST['email'], $confirm_token, $username);
         

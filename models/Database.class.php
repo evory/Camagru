@@ -81,7 +81,7 @@ class Database
         $statement->closeCursor();
         return($result);
         } catch (Exception $e) {
-            // exit($e->getMessage());
+            exit($e->getMessage());
         }
     }
 
