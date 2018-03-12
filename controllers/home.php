@@ -50,7 +50,7 @@ if ($action == "upload_pic") {
 /*------------check-if-image-------------*/
         function isimage(){
             $type = $_FILES['image']['type'];
-            $extensions = array('image/jpg','image/jpe','image/jpeg','image/jfif','image/png','image/bmp','image/dib','image/gif');
+            $extensions = array('image/jpg','image/jpe','image/jpeg','image/png','image/bmp','image/gif');
             if(in_array($type, $extensions)){
                 return true;
             }
