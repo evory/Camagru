@@ -49,13 +49,13 @@ if ($action == "login") {
                 include("./view/footer.php");
                 exit();
             }
-            // else if (!empty($check_conf_token['confirm_token'])) {
-            //     include("./view/header.php");
-            //     $message = "Please verify your email";      verif email         A DECOMMENTER
-            //     include("./view/login.php");
-            //     include("./view/footer.php");
-            //     exit();
-            // }
+            else if (!empty($check_conf_token['confirm_token'])) {
+                include("./view/header.php");
+                $message = "Please verify your email";
+                include("./view/login.php");
+                include("./view/footer.php");
+                exit();
+            }
             else {
                 $_SESSION['login'] = $username;
             }

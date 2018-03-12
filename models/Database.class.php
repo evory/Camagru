@@ -56,7 +56,6 @@ class Database
     * @param $multiple La requete doit-elle retourner plusieurs resultats ?
     */
     public function request($sql, $fields = false, $multiple = false) {
-        try {
             $statement = $this->_PDOInstance->prepare($sql);
             if($fields) {
                 foreach ($fields as $key => $value) {
@@ -80,9 +79,6 @@ class Database
             }
         $statement->closeCursor();
         return($result);
-        } catch (Exception $e) {
-            exit($e->getMessage());
-        }
     }
 
 /*----------------------------------------------------------------------------*/

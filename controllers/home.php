@@ -187,13 +187,14 @@ if ($action == "gallery") {
         $check_if_notif_allowed = current($check_if_notif_allowed);
 
 
-        $send_notif = new Email();
         $email_pic_owner = Database::getInstance()->request("SELECT email
                                                              FROM user
-                                                             WHERE username = '$username_pic_owner';",
-                                                             false, true);
+                                                             WHERE id = '$current_pic_id';",
+                                                             false, false);
+        $email_pic_owner = current($email_pic_owner);
         if ($check_if_notif_allowed == 1) {
-            $send_notif->newCommentEmail($email_pic_owner, $username_comment);
+            $send_notif = new Email();
+            $send_notif->newCommentEmail($email_pic_owner, $_SESSION['login']);
         }
     }
 
@@ -349,6 +350,31 @@ if($action == "your_pictures") {
                                           VALUES (NULL, '$current_pic_id', '$username', :commentPost, '$date_time');",
                                           $field, false);
     }
+/*-----------send-notif-----------*/
+        $username_pic_owner = Database::getInstance()->request("SELECT username
+                                                             FROM pictures
+                                                             WHERE id_pic = '$current_pic_id';",
+                                                             false, false);
+        $username_pic_owner = current($username_pic_owner);
+
+        $check_if_notif_allowed = Database::getInstance()->request("SELECT commentemail
+                                                             FROM user
+                                                             WHERE username = '$username_pic_owner';",
+                                                             false, false);
+        $check_if_notif_allowed = current($check_if_notif_allowed);
+
+
+        $email_pic_owner = Database::getInstance()->request("SELECT email
+                                                             FROM user
+                                                             WHERE id = '$current_pic_id';",
+                                                             false, false);
+        $email_pic_owner = current($email_pic_owner);
+        if ($check_if_notif_allowed == 1) {
+            echo "lol";
+            $send_notif = new Email();
+            $send_notif->newCommentEmail($email_pic_owner, $_SESSION['login']);
+        }
+/*-----------protection-----------*/
     if (isset($_GET['type'], $_GET['id_pic'])) {
         if (!is_numeric($_GET['id_pic'])) {
             $message = "wrong URL";
