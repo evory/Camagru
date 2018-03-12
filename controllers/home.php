@@ -6,7 +6,7 @@ require_once('./models/Mail.class.php');
 
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 
-/*------------------------------SIDE-BAR-CANVAS-------------------------------*/
+/*------------------------------SIDE-BAR-CANVAS---------------------------------*/
 $username_log = $_SESSION['login'];
 
 
@@ -30,7 +30,7 @@ if ($recent_pics_count < 5){
     }
 }
 
-/*--------------------------------UPLOAD-PICS---------------------------------*/
+/*------------------------------UPLOAD-PICS---------------------------------*/
 
 if ($action == "upload_pic") {
     include("./view/header.php");
@@ -39,6 +39,10 @@ if ($action == "upload_pic") {
             $message = "Please login if you want to upload pictures";
             include("./view/home.php");
             include("./view/footer.php");
+            exit();
+        }
+        if (preg_match('#[\x00-\x1F\x7F-\x9F/\\\\]#', $name_file)){
+            $message = "invalid file name";
             exit();
         }
         $target = "view/images/".basename($_FILES['image']['name']);
@@ -94,7 +98,7 @@ if ($action == "gallery") {
     include("./view/header.php");
     include("./view/gallery.php");
     if (empty($_SESSION['login'])) {
-        echo "Please log in to comment <br>";
+        echo "<h2>Please log in to comment</h2> <br>";
     }
 /*--------display pictures--------*/
     for ($i=0; $allPictures[$i]; $i++) {

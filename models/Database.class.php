@@ -5,7 +5,7 @@
 */
 
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
-include "$root/config/db-config.php";
+include "$root/config/database.php";
 
 class Database
 {
@@ -60,8 +60,6 @@ class Database
             $statement = $this->_PDOInstance->prepare($sql);
             if($fields) {
                 foreach ($fields as $key => $value) {
-                    var_dump($key);
-                    var_dump($value);
                     if(is_int($value)) {
                         $dataType = PDO::PARAM_INT;
                     } else if(is_bool($value)) {
@@ -83,7 +81,7 @@ class Database
         $statement->closeCursor();
         return($result);
         } catch (Exception $e) {
-            exit($e->getMessage());
+            // exit($e->getMessage());
         }
     }
 

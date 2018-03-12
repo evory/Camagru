@@ -16,10 +16,11 @@ if ($action == "login") {
             exit();
         } else if (Database::getInstance()->verify_duplicates($login_db, $_POST['username'])) {
             $username = $_POST['username'];
+            $field = ['username' => $username];
             $check_conf_token = Database::getInstance()->request("SELECT confirm_token
                                                                   FROM user
-                                                                  WHERE username = '$username';",
-                                                                  false, false);
+                                                                  WHERE username = :username;",
+                                                                  $field, false);
         } else {
             include("./view/header.php");
             $message = "Wrong username";
@@ -34,12 +35,13 @@ if ($action == "login") {
             include("./view/footer.php");
             exit();
         } else {
-            $hash_user_db = Database::getInstance()->request("SELECT hash
+            $field = ['username' => $username];
+            $hash_user_db = Database::getInstance()->request("SELECT hashh
                                                               FROM user
-                                                              WHERE username = '$username';",
-                                                              false, false);
+                                                              WHERE username = :username;",
+                                                              $field, false);
         }
-        if ($username && password_verify($_POST['password'], $hash_user_db['hash'])) {
+        if ($username && password_verify($_POST['password'], $hash_user_db['hashh'])) {
             if (Database::getInstance()->verify_duplicates($login_db, $username) == 0) {
                 include("./view/header.php");
                 $message = "Wrong username";
@@ -77,7 +79,7 @@ if ($action == "logout") {
 /*-----------------------------------SIGNIN-----------------------------------*/
 
 if ($action == "signin") {
-    if (isset($_POST['submit'])) {
+    if (isset($_POST['submit'])) {      
 /*-------check-if-empty-email-------*/
         if (empty($_POST['email'])) {
             include("./view/header.php");
@@ -103,9 +105,17 @@ if ($action == "signin") {
             exit();
         }
 /*-------check-if-username-exist-------*/
-        if (Database::getInstance()->verify_duplicates($login_db, $_POST['username'])) {
+        if (Database::getInstance()->verify_duplicates($login_db, $username)) {
             include("./view/header.php");
             $message = "Username already taken";
+            include("./view/signin.php");
+            include("./view/footer.php");
+            exit();
+        }
+/*-------check-special-char-username-------*/    
+        if (preg_match('#^(?=.*\W)#', $_POST['username'])) {
+            include("./view/header.php");
+            $message = "Special characters not allowed";
             include("./view/signin.php");
             include("./view/footer.php");
             exit();
@@ -118,6 +128,13 @@ if ($action == "signin") {
             include("./view/footer.php");
             exit();
         }
+        if (!preg_match('#^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W)#', $_POST['password'])) {
+            include("./view/header.php");
+            $message = "Wrong password syntax";
+            include("./view/signin.php");
+            include("./view/footer.php");
+            exit();
+        }
 /*-----------check-pass-match----------*/
         if (($_POST['password'] !== $_POST['confirm_password'])) {
             include("./view/header.php");
@@ -126,20 +143,19 @@ if ($action == "signin") {
             include("./view/footer.php");
             exit();
         }
-        $username = $_POST['username'];
         $email = $_POST['email'];
-        $hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        $hashh = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $confirm_token = hash("md5", time());
         $send_email = new Email();
         $send_email->welcomeEmail($_POST['email'], $confirm_token, $username);
         
-        $field = ['email' => $email, 'username' =>$username, 'hash' => $hash, 'confirm_token' => $confirm_token];
+        $field = ['email' => $email, 'username' =>$username, 'hashh' => $hashh, 'confirm_token' => $confirm_token];
         
-        Database::getInstance()->request("INSERT INTO `user` (`id`, `email`, `username`, `hash`, `htoken`, `confirm_token`)
-        VALUES (NULL, :email, :username, :hashh, NULL, :confirm_token);",
-        $field, false);
+        Database::getInstance()->request("INSERT INTO `user` (`id`, `email`, `username`, `hashh`, `htoken`, `confirm_token`)
+                                          VALUES (NULL, :email, :username, :hashh, NULL, :confirm_token);",
+                                          $field, false);
 
-        $message = "An email as been send to your your email address, please confirm yor address to cotinue";
+        $message = "An email as been send to your your email address, please confirm your address to continue";
     }
     include("./view/header.php");
     include("./view/signin.php");
@@ -196,17 +212,17 @@ if ($action == "account") {
                                           $field, false);
 /*----change-username-in-all-db----*/
         Database::getInstance()->request("UPDATE `pictures`
-                                          SET `username` = '$new_username'
+                                          SET `username` = :new_username
                                           WHERE `pictures`.`username` = '$old_username';",
-                                          false, false);
+                                          $field, false);
         Database::getInstance()->request("UPDATE `likes`
-                                          SET `username` = '$new_username'
+                                          SET `username` = :new_username
                                           WHERE `likes`.`username` = '$old_username';",
-                                          false, false);
+                                          $field, false);
         Database::getInstance()->request("UPDATE `comments`
-                                          SET `username` = '$new_username'
+                                          SET `username` = :new_username
                                           WHERE `comments`.`username` = '$old_username';",
-                                          false, false);
+                                          $field, false);
         $_SESSION['login'] = $new_username;
     }
 
@@ -251,20 +267,21 @@ if ($action == "account") {
             exit();
         }
 
-        $hash_user_db = Database::getInstance()->request("SELECT hash
+        $hash_user_db = Database::getInstance()->request("SELECT hashh
                                                           FROM user
                                                           WHERE username = '$username';",
                                                           false, false);
-        if ((password_verify($_POST['old_password'], $hash_user_db['hash'])) == FALSE) {
+        if ((password_verify($_POST['old_password'], $hash_user_db['hashh'])) == false) {
             include("./view/header.php");
             $message = "Old password dosen't match";
             include("./view/account.php");
             include("./view/footer.php");
             exit();
             }
-        $new_hash = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
+        $new_hashh = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
+        $field = ['new_hashh' => $new_hashh];
         Database::getInstance()->request("UPDATE `user`
-                                          SET `hash` = '$new_hash'
+                                          SET `hashh` = :new_hashh
                                           WHERE `user`.`id` = '$user_id';",
                                           false, false);
         $message = "Password has been updated";
@@ -334,6 +351,14 @@ if ($action == "new_password") {
                 include("./view/footer.php");
                 exit();
             }
+/*---------check-syntax-pass---------*/
+            if (!preg_match('#^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W)#', $_POST['new_password'])) {
+                include("./view/header.php");
+                $message = "Wrong password syntax";
+                include("./view/new_password.php");
+                include("./view/footer.php");
+                exit();
+            }
 /*---------check-pass-match---------*/
             if (($_POST['new_password'] !== $_POST['confirm_new_password'])) {
                 include("./view/header.php");
@@ -344,21 +369,24 @@ if ($action == "new_password") {
             }
 /*---------select-id-token---------*/
             $htoken = $_GET['htoken'];
-            $chang_pass_id = current(Database::getInstance()->request("SELECT `id`
+            $field = ['htoken' => $htoken];
+            $change_pass_id = current(Database::getInstance()->request("SELECT `id`
                                                                FROM `user`
-                                                               WHERE `user`.`htoken` = '$htoken';",
-                                                               false, false));
+                                                               WHERE `user`.`htoken` = :htoken;",
+                                                               $field, false));
+            $message = "Password has beed updated";
 /*---------set-new-pass---------*/
-            $new_hash = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
+            $new_hashh = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
+            $field = ['new_hashh' => $new_hashh];
             Database::getInstance()->request("UPDATE `user`
-                                              SET `hash` = '$new_hash'
+                                              SET `hashh` = :new_hashh
                                               WHERE `user`.`htoken` = '$htoken';",
-                                              false, false);
+                                              $field, false);
 
 /*---------delete-token---------*/
             Database::getInstance()->request("UPDATE `user`
                                               SET `htoken` = NULL
-                                              WHERE `user`.`id` = '$chang_pass_id';",
+                                              WHERE `user`.`id` = '$change_pass_id';",
                                               false, false);
         }
     } else {
